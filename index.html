@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY CLIPS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Barlow+Condensed:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── ZLAN blue-night palette ── */
+    --bg:        #080d1e;
+    --bg2:       #0b1226;
+    --bg3:       #0f162e;
+    --surface:   #141d38;
+    --surface2:  #1a2444;
+    --border:    rgba(255,255,255,0.07);
+    --border-hi: rgba(255,255,255,0.16);
+    --text:      #e8ecff;
+    --text-muted:#6a7aaa;
+    --text-dim:  #2e3a60;
+
+    /* ── Brand gradient (nav logo, modal accent) ── */
+    --brand-a: #33207D;   /* violet */
+    --brand-b: #00ED3B;   /* neon green */
+
+    /* ── Per-game colours ── */
+    /* KACKY — violet deep for surfaces, light for text */
+    --kacky:      #A078FF;   /* text, labels, glows */
+    --kacky-bg:   #33207D;   /* backgrounds, borders */
+    --kacky-dim:  rgba(51,32,125,0.22);
+    --kacky-glow: rgba(160,120,255,0.45);
+    --kacky-dark: rgba(51,32,125,0.08);
+
+    /* ROCKET LEAGUE — neon green */
+    --rl:         #00ED3B;
+    --rl-dim:     rgba(0,237,59,0.1);
+    --rl-glow:    rgba(0,237,59,0.4);
+    --rl-dark:    rgba(0,237,59,0.05);
+
+    /* CALL OF DUTY — icy silver-white */
+    --cod:        #c8d8ff;
+    --cod-dim:    rgba(200,216,255,0.1);
+    --cod-glow:   rgba(200,216,255,0.35);
+    --cod-dark:   rgba(200,216,255,0.04);
+
+    --font-pixel: 'Press Start 2P', monospace;
+    --font-body:  'Barlow Condensed', sans-serif;
+    --font-mono:  'Share Tech Mono', monospace;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  /* ZLAN-style: dark pixel grid with blue tint */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(100,120,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(100,120,255,0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Subtle noise scanlines */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      rgba(0,0,20,0.06) 2px, rgba(0,0,20,0.06) 3px
+    );
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(8,13,30,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+
+  .nav-logo {
+    font-family: var(--font-pixel);
+    font-size: 9px; letter-spacing: 3px;
+    text-decoration: none; color: var(--text);
+  }
+  .nav-logo em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--brand-a), var(--brand-b));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links { display: flex; list-style: none; }
+  .nav-links a {
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 16px;
+    font-family: var(--font-pixel); font-size: 6.5px; letter-spacing: 1.5px;
+    color: var(--text-muted); text-decoration: none;
+    border-left: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .nav-links li:last-child a { border-right: 1px solid var(--border); }
+  .nav-links a.n-k:hover { color: var(--kacky); }
+  .nav-links a.n-r:hover { color: var(--rl); }
+  .nav-links a.n-c:hover { color: var(--cod); }
+
+  .ndot { width:5px;height:5px;border-radius:1px;flex-shrink:0;display:inline-block; }
+  .dk { background:var(--kacky); box-shadow:0 0 5px var(--kacky); }
+  .dr { background:var(--rl);    box-shadow:0 0 5px var(--rl); }
+  .dc { background:var(--cod);   box-shadow:0 0 5px var(--cod); }
+
+  /* ══ HERO ══ */
+  .hero {
+    position: relative; z-index:1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 80px 2rem 5rem;
+    overflow: hidden;
+  }
+
+  /* ZLAN-style radial glows */
+  .hero-glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(100px); pointer-events: none;
+  }
+  .glow-v { width:600px;height:500px;background:rgba(140,0,255,0.18);top:-80px;left:-120px; }
+  .glow-g { width:500px;height:400px;background:rgba(40,255,10,0.1);bottom:-60px;right:-100px; }
+  .glow-b { width:800px;height:300px;background:rgba(30,60,200,0.15);top:50%;left:50%;transform:translate(-50%,-50%); }
+
+  /* Diagonal slash lines — signature ZLAN graphic element */
+  .hero-slash {
+    position: absolute;
+    width: 3px; height: 220px;
+    background: linear-gradient(to bottom, transparent, var(--kacky), transparent);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .slash1 { left:12%;top:10%;transform:rotate(25deg); }
+  .slash2 { right:18%;top:20%;transform:rotate(25deg);background:linear-gradient(to bottom,transparent,var(--rl),transparent); }
+  .slash3 { right:8%;bottom:15%;transform:rotate(25deg);background:linear-gradient(to bottom,transparent,var(--cod),transparent); }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 5px;
+    color: var(--text-dim); margin-bottom: 2rem;
+  }
+
+  .hero-h1 {
+    font-family: var(--font-pixel);
+    font-size: clamp(15px, 3.2vw, 30px);
+    line-height: 1.8; color: #fff; margin-bottom: 1.25rem;
+  }
+  .hero-h1 .grad {
+    background: linear-gradient(90deg, var(--brand-a), var(--brand-b));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 20px; font-weight: 400; color: var(--text-muted);
+    max-width: 460px; margin: 0 auto 3rem;
+  }
+
+  .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+
+  .cta {
+    font-family: var(--font-pixel); font-size: 7px; letter-spacing: 2px;
+    padding: 12px 22px; text-decoration: none; border: 1px solid;
+    position: relative; overflow: hidden; transition: all 0.2s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .cta::before { content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.2s; }
+  .cta:hover { transform:translateY(-2px); }
+  .cta:hover::before { opacity:1; }
+
+  .cta-k { border-color:var(--kacky);color:var(--kacky); }
+  .cta-k::before { background:var(--kacky-dim); }
+  .cta-k:hover { box-shadow:0 0 28px var(--kacky-glow); }
+
+  .cta-r { border-color:var(--rl);color:var(--rl); }
+  .cta-r::before { background:var(--rl-dim); }
+  .cta-r:hover { box-shadow:0 0 28px var(--rl-glow); }
+
+  .cta-c { border-color:var(--cod);color:var(--cod); }
+  .cta-c::before { background:var(--cod-dim); }
+  .cta-c:hover { box-shadow:0 0 28px var(--cod-glow); }
+
+  .scroll-cue {
+    position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:3px;color:var(--text-dim);
+    animation:scfloat 2.2s ease-in-out infinite;
+  }
+  .scroll-cue::after { content:'';width:1px;height:36px;background:linear-gradient(var(--text-dim),transparent); }
+
+  /* Animated divider */
+  @keyframes divider-flow {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  .divider-animated {
+    height: 2px;
+    position: relative; z-index: 1;
+    margin: 0 2rem;
+    background-size: 200% auto;
+    animation: divider-flow 12s linear infinite;
+  }
+  .divider-kacky {
+    background-image: linear-gradient(90deg, transparent, var(--kacky), var(--kacky-bg), var(--kacky), transparent);
+  }
+  .divider-rl {
+    background-image: linear-gradient(90deg, transparent, var(--rl), rgba(0,237,59,0.3), var(--rl), transparent);
+  }
+  .divider-cod {
+    background-image: linear-gradient(90deg, transparent, var(--cod), rgba(200,216,255,0.3), var(--cod), transparent);
+  }
+  @keyframes scfloat {
+    0%,100%{transform:translateX(-50%) translateY(0)}
+    50%{transform:translateX(-50%) translateY(-7px)}
+  }
+
+  /* Flash highlight when jumping to a related card */
+  @keyframes cardflash {
+    0%,100% { background: var(--bg2); }
+    30%     { background: rgba(160,120,255,0.22); box-shadow: inset 0 0 0 1px var(--kacky); }
+  }
+  .card-flash { animation: cardflash 1.4s ease; }
+
+  /* ══ SECTIONS SHARED ══ */
+  .divider-placeholder { display:none; }
+
+  section {
+    position:relative;z-index:1;
+    padding:5.5rem 2rem;
+    max-width:1220px;margin:0 auto;
+  }
+
+  /* Section background accent stripe */
+  .s-kacky { background: radial-gradient(ellipse 60% 40% at 80% 50%, var(--kacky-dark), transparent); }
+  .s-rl    { background: radial-gradient(ellipse 60% 40% at 20% 50%, var(--rl-dark),    transparent); }
+  .s-cod   { background: radial-gradient(ellipse 60% 40% at 80% 50%, var(--cod-dark),   transparent); }
+
+  .sec-hdr { display:flex;align-items:flex-end;gap:1.5rem;margin-bottom:3rem; }
+
+  .sec-icon {
+    width:52px;height:52px;border-radius:3px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;overflow:hidden;
+  }
+  .sec-icon img {
+    width:100%;height:100%;object-fit:contain;padding:7px;
+    filter:brightness(1.15) drop-shadow(0 0 4px currentColor);
+  }
+  .s-kacky .sec-icon { background:var(--kacky-dim);border:1px solid rgba(51,32,125,0.35); }
+  .s-rl    .sec-icon { background:var(--rl-dim);   border:1px solid rgba(57,255,20,0.2); }
+  .s-cod   .sec-icon { background:var(--cod-dim);  border:1px solid rgba(200,216,255,0.2); }
+
+  .sec-meta { flex:1; }
+  .sec-label { font-family:var(--font-mono);font-size:10px;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px; }
+  .s-kacky .sec-label { color:var(--kacky); }
+  .s-rl    .sec-label { color:var(--rl); }
+  .s-cod   .sec-label { color:var(--cod); }
+
+  .sec-title { font-family:var(--font-pixel);font-size:clamp(11px,2vw,18px);color:#fff;line-height:1.5; }
+  .sec-count { font-family:var(--font-mono);font-size:11px;color:var(--text-dim);flex-shrink:0;text-align:right; }
+
+  /* Section top border — coloured */
+
+  /* ══ KACKY ══ */
+  .event-tabs {
+    display:flex;gap:0;flex-wrap:wrap;
+    border:1px solid var(--border);width:fit-content;
+    margin-bottom:2rem;
+  }
+  .etab {
+    font-family:var(--font-pixel);font-size:8px;letter-spacing:1.5px;
+    padding:14px 24px;border:none;background:transparent;
+    color:var(--text-muted);cursor:pointer;
+    border-right:1px solid var(--border);
+    transition:all 0.15s;white-space:nowrap;
+  }
+  .etab:last-child { border-right:none; }
+  .etab:hover  { color:var(--kacky);background:var(--kacky-dim); }
+  .etab.active { color:var(--kacky);background:var(--kacky-dim);box-shadow:inset 0 -3px 0 var(--kacky-bg); }
+
+  .kacky-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+    gap:1px;background:var(--border);border:1px solid var(--border);
+  }
+  .map-card {
+    background:var(--bg2);cursor:pointer;
+    position:relative;overflow:hidden;transition:background 0.15s;
+    display:flex;flex-direction:column;
+  }
+  .map-card:hover { background:var(--surface); }
+  .map-card.hidden { display:none; }
+
+  /* Thumbnail */
+  .map-thumb {
+    position:relative;padding-bottom:56.25%;
+    background:var(--bg3);overflow:hidden;flex-shrink:0;
+  }
+  .map-thumb img {
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;opacity:0.75;transition:opacity 0.2s;
+  }
+  .map-card:hover .map-thumb img { opacity:1; }
+  .map-thumb-overlay {
+    position:absolute;inset:0;
+    background:linear-gradient(to bottom, transparent 40%, rgba(8,13,30,0.85) 100%);
+  }
+  /* Map number badge overlaid on thumbnail */
+  .map-thumb-num {
+    position:absolute;top:10px;left:12px;
+    font-family:var(--font-pixel);font-size:8px;letter-spacing:1px;
+    color:var(--kacky);
+    background:rgba(8,13,30,0.75);
+    padding:4px 8px;
+    border:1px solid rgba(160,120,255,0.3);
+  }
+
+  .map-inner { padding:1rem 1.25rem 1.25rem; }
+  .map-evt  { font-family:var(--font-mono);font-size:11px;letter-spacing:1px;padding:4px 10px;border:1px solid rgba(51,32,125,0.5);background:rgba(51,32,125,0.2);color:var(--kacky);display:inline-block;margin-bottom:10px; }
+  .map-num  { display:none; } /* now shown on thumbnail */
+  .map-name { font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3; }
+  .map-tags { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px; }
+  .map-tag  { font-family:var(--font-mono);font-size:11px;padding:3px 10px;border:1px solid var(--border-hi);color:var(--text-muted); }
+  .map-bonus-hint { font-family:var(--font-mono);font-size:11px;color:var(--kacky);opacity:0.9;margin-top:12px;letter-spacing:1px; }
+  .map-bar  { position:absolute;bottom:0;left:0;height:2px;width:0;background:var(--kacky-bg);box-shadow:0 0 10px var(--kacky-glow);transition:width 0.3s; }
+  .map-card:hover .map-bar { width:100%; }
+
+  /* Bonus button on card */
+  .map-bonus-btn {
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:8px;
+    font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
+    color:var(--kacky);border:1px solid rgba(160,120,255,0.3);
+    padding:6px 12px;background:rgba(51,32,125,0.15);
+    cursor:pointer;transition:all 0.15s;
+  }
+  .map-bonus-btn:hover { background:rgba(51,32,125,0.35);border-color:var(--kacky); }
+  .map-bonus-btn.open  { background:rgba(51,32,125,0.35);border-color:var(--kacky);box-shadow:0 0 8px var(--kacky-glow); }
+  .map-bonus-btn .chevron { transition:transform 0.2s; display:inline-flex;align-items:center; }
+  .map-bonus-btn.open .chevron { transform:rotate(180deg); }
+
+  /* Inline bonus expand panel — sits outside .map-inner, spans full card width */
+  .map-bonus-panel {
+    display:none;
+    border-top:1px solid rgba(160,120,255,0.15);
+    background:rgba(8,13,30,0.6);
+    padding:1rem 1.5rem;
+  }
+  .map-bonus-panel.open { display:block; }
+  .map-bonus-panel-label {
+    font-family:var(--font-mono);font-size:11px;letter-spacing:3px;
+    color:var(--kacky);margin-bottom:10px;opacity:0.8;
+  }
+  .map-bonus-rows { display:flex;flex-direction:column;gap:1px; }
+
+  /* Remix badge on card — Option A */
+  .map-remix-badge {
+    display:flex;align-items:center;gap:7px;
+    margin-top:12px;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:1px;
+    color:var(--text-muted);border:1px solid var(--border-hi);
+    padding:6px 12px;background:rgba(255,255,255,0.03);
+    cursor:pointer;transition:all 0.15s;
+    width:fit-content;
+  }
+  .map-remix-badge:hover { color:var(--kacky);border-color:var(--kacky);background:var(--kacky-dim); }
+  .map-remix-badge svg { flex-shrink:0; }
+
+  /* Related clip strip in modal — Option B */
+  .modal-related { display:none;border-top:1px solid var(--border);padding:1rem 1.5rem; }
+  .modal-related.has-related { display:block; }
+  .modal-related-label {
+    font-family:var(--font-mono);font-size:10px;letter-spacing:3px;
+    color:var(--text-muted);margin-bottom:10px;
+  }
+  .modal-related-links { display:flex;gap:10px;flex-wrap:wrap; }
+  .modal-related-btn {
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:1px;
+    color:var(--kacky);border:1px solid rgba(160,120,255,0.3);
+    padding:8px 14px;background:rgba(51,32,125,0.12);
+    cursor:pointer;transition:all 0.15s;
+  }
+  .modal-related-btn:hover { background:rgba(51,32,125,0.3);border-color:var(--kacky);box-shadow:0 0 8px var(--kacky-glow); }
+  .modal-related-btn svg { flex-shrink:0; }
+  .map-bonus-row {
+    display:flex;align-items:center;gap:12px;
+    padding:9px 10px;
+    background:var(--bg2);
+    cursor:pointer;transition:background 0.15s;
+    border-left:2px solid rgba(160,120,255,0.2);
+  }
+  .map-bonus-row:hover { background:var(--surface);border-left-color:var(--kacky); }
+  .map-bonus-row-icon {
+    width:32px;height:32px;flex-shrink:0;
+    position:relative;overflow:hidden;background:var(--bg3);
+  }
+  .map-bonus-row-icon img { width:100%;height:100%;object-fit:cover;opacity:0.75; }
+  .map-bonus-row-play {
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  }
+  .map-bonus-row-play svg { width:14px;height:14px; }
+  .map-bonus-row-title { font-size:14px;font-weight:700;color:var(--text);flex:1; }
+  .map-bonus-row-open {
+    font-family:var(--font-pixel);font-size:6px;letter-spacing:1px;
+    color:var(--kacky);opacity:0;transition:opacity 0.15s;white-space:nowrap;
+  }
+  .map-bonus-row:hover .map-bonus-row-open { opacity:1; }
+
+  /* ══ ROCKET LEAGUE ══ */
+  .rl-tabs {
+    display:flex;gap:0;flex-wrap:wrap;
+    border:1px solid var(--border);width:fit-content;
+    margin-bottom:2rem;
+  }
+  .rl-tab {
+    font-family:var(--font-pixel);font-size:8px;letter-spacing:1.5px;
+    padding:14px 24px;border:none;background:transparent;
+    color:var(--text-muted);cursor:pointer;
+    border-right:1px solid var(--border);
+    transition:all 0.15s;white-space:nowrap;
+  }
+  .rl-tab:last-child { border-right:none; }
+  .rl-tab:hover  { color:var(--rl);background:var(--rl-dim); }
+  .rl-tab.active { color:var(--rl);background:var(--rl-dim);box-shadow:inset 0 -3px 0 var(--rl); }
+
+  .rl-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.5rem; }
+  .rl-card {
+    background:var(--bg2);border:1px solid var(--border);
+    overflow:hidden;cursor:pointer;position:relative;
+    transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+  }
+  .rl-card:hover {
+    border-color:rgba(57,255,20,0.4);
+    transform:translateY(-3px);
+    box-shadow:0 8px 32px rgba(57,255,20,0.1);
+  }
+  .rl-thumb { position:relative;padding-bottom:56.25%;background:var(--bg3);overflow:hidden; }
+  .rl-thumb img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;transition:opacity 0.2s; }
+  .rl-card:hover .rl-thumb img { opacity:0.9; }
+  .rl-play { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+  .rl-play svg { width:50px;height:50px;opacity:0.85;filter:drop-shadow(0 0 12px var(--rl-glow));transition:transform 0.2s,opacity 0.2s; }
+  .rl-card:hover .rl-play svg { transform:scale(1.1);opacity:1; }
+  .rl-info { padding:1rem 1.25rem; }
+  .rl-title { font-size:19px;font-weight:800;margin-bottom:4px; }
+  .rl-meta  { font-family:var(--font-mono);font-size:10px;color:var(--text-dim); }
+  .rl-bar   { position:absolute;top:0;left:0;width:3px;height:0;background:var(--rl);box-shadow:0 0 10px var(--rl-glow);transition:height 0.3s; }
+  .rl-card:hover .rl-bar { height:100%; }
+
+  /* ══ CALL OF DUTY ══ */
+  .cod-list { display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border); }
+  .cod-row {
+    display:grid;grid-template-columns:52px 1fr auto;
+    align-items:center;gap:1.5rem;padding:1.2rem 1.5rem;
+    background:var(--bg2);cursor:pointer;position:relative;transition:background 0.15s;
+  }
+  .cod-row:hover { background:var(--surface); }
+  .cod-idx   { font-family:var(--font-pixel);font-size:7.5px;color:var(--text-dim);text-align:center; }
+  .cod-title { font-size:19px;font-weight:800;color:var(--text); }
+  .cod-sub   { font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-top:2px; }
+  .cod-btn   { font-family:var(--font-pixel);font-size:7px;color:var(--cod);border:1px solid rgba(200,216,255,0.22);padding:8px 14px;opacity:0;transition:all 0.15s;white-space:nowrap; }
+  .cod-row:hover .cod-btn { opacity:1;background:var(--cod-dim); }
+  .cod-row::after { content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:var(--cod);box-shadow:0 0 10px var(--cod-glow);transition:width 0.2s; }
+  .cod-row:hover::after { width:2px; }
+
+  /* ══ MODAL ══ */
+  .modal-overlay {
+    display:none;position:fixed;inset:0;
+    background:rgba(4,6,18,0.95);z-index:200;
+    align-items:flex-start;justify-content:center;
+    padding:2rem;backdrop-filter:blur(8px);
+    overflow-y:auto;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background:var(--bg2);border:1px solid var(--border-hi);
+    max-width:920px;width:100%;position:relative;
+    margin:auto;
+  }
+  .modal::before {
+    content:'';position:absolute;top:-1px;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--brand-a),var(--brand-b));
+    box-shadow:0 0 12px rgba(51,32,125,0.6);
+  }
+  .modal-hdr {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  }
+  .modal-sub  { font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-bottom:2px; }
+  .modal-name { font-family:var(--font-pixel);font-size:8px;letter-spacing:1px; }
+  .modal-close {
+    background:none;border:1px solid var(--border-hi);color:var(--text-muted);
+    cursor:pointer;font-family:var(--font-pixel);font-size:7px;
+    padding:6px 12px;letter-spacing:1px;transition:all 0.15s;
+  }
+  .modal-close:hover { color:var(--kacky);border-color:var(--kacky); }
+  .modal-vid { position:relative;padding-bottom:56.25%;background:#000; }
+  .modal-vid iframe { position:absolute;inset:0;width:100%;height:100%;border:none; }
+
+  /* Bonus clips section */
+  .modal-bonus { display:none;border-top:1px solid var(--border);padding:1.25rem 1.5rem; }
+  .modal-bonus.has-bonus { display:block; }
+  .modal-bonus-label {
+    font-family:var(--font-mono);font-size:11px;letter-spacing:2px;
+    color:var(--kacky);margin-bottom:1rem;
+  }
+  .bonus-list {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+    gap:10px;
+  }
+  .bonus-thumb {
+    cursor:pointer;position:relative;
+    border:1px solid var(--border);overflow:hidden;
+    transition:border-color 0.15s,transform 0.15s;
+    background:var(--bg3);
+  }
+  .bonus-thumb:hover { border-color:var(--kacky);transform:translateY(-2px); }
+  .bonus-thumb.bonus-active { border-color:var(--kacky);box-shadow:0 0 10px var(--kacky-glow); }
+  .bonus-img { position:relative;padding-bottom:56.25%;overflow:hidden; }
+  .bonus-img img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;transition:opacity 0.15s; }
+  .bonus-thumb:hover .bonus-img img { opacity:0.9; }
+  .bonus-play { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+  .bonus-play svg { width:28px;height:28px;filter:drop-shadow(0 0 6px var(--kacky-glow)); }
+  .bonus-info { padding:7px 10px; }
+  .bonus-title { font-size:13px;font-weight:700;color:var(--text);line-height:1.3; }
+
+  /* Modal related (see also) section */
+  .modal-related { display:none;border-top:1px solid var(--border);padding:1.25rem 1.5rem; }
+  .modal-related.has-related { display:block; }
+  .modal-related-label {
+    font-family:var(--font-mono);font-size:11px;letter-spacing:2px;
+    color:var(--text-muted);margin-bottom:1rem;
+  }
+  .related-list { display:flex;flex-direction:column;gap:6px; }
+  .related-row {
+    display:flex;align-items:center;gap:14px;
+    padding:10px 14px;
+    background:var(--bg3);border:1px solid var(--border);
+    cursor:pointer;transition:all 0.15s;
+  }
+  .related-row:hover { background:var(--surface);border-color:var(--kacky); }
+  .related-arrow {
+    font-family:var(--font-mono);font-size:11px;
+    color:var(--kacky);flex-shrink:0;letter-spacing:1px;
+    white-space:nowrap;
+  }
+  .related-info { flex:1;min-width:0; }
+  .related-event { font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-bottom:2px; }
+  .related-name  { font-size:16px;font-weight:700;color:var(--text); }
+  .related-play  {
+    font-family:var(--font-pixel);font-size:6.5px;letter-spacing:1px;
+    color:var(--kacky);opacity:0;transition:opacity 0.15s;white-space:nowrap;
+  }
+  .related-row:hover .related-play { opacity:1; }
+
+  /* ══ FOOTER ══ */
+  footer {
+    position:relative;z-index:1;
+    border-top:1px solid var(--border);
+    padding:2.5rem 2rem;text-align:center;
+  }
+  .f-logo { font-family:var(--font-pixel);font-size:8px;letter-spacing:3px;margin-bottom:8px; }
+  .f-logo em { font-style:normal;background:linear-gradient(90deg,var(--brand-a),var(--brand-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+  .f-sub  { font-family:var(--font-mono);font-size:10px;color:var(--text-dim);letter-spacing:2px; }
+
+  @media(max-width:620px){
+    nav{padding:0 1rem;}
+    .nav-links a{padding:8px 9px;font-size:5.5px;}
+    section{padding:4rem 1rem;}
+    .cod-row{grid-template-columns:38px 1fr;}
+    .cod-btn{display:none;}
+    .event-tabs{width:100%;}
+    .etab{flex:1;text-align:center;padding:10px 8px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">MY<em>.</em>CLIPS</a>
+  <ul class="nav-links">
+    <li><a href="#kacky" class="n-k"><span class="ndot dk"></span>KACKY</a></li>
+    <li><a href="#rl"    class="n-r"><span class="ndot dr"></span>ROCKET LEAGUE</a></li>
+    <li><a href="#cod"   class="n-c"><span class="ndot dc"></span>CALL OF DUTY</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow glow-v"></div>
+  <div class="hero-glow glow-g"></div>
+  <div class="hero-glow glow-b"></div>
+  <div class="hero-slash slash1"></div>
+  <div class="hero-slash slash2"></div>
+  <div class="hero-slash slash3"></div>
+
+  <p class="hero-eyebrow">// MY BEST CLIPS //</p>
+  <h1 class="hero-h1">PERSONAL<br><span class="grad">HIGHLIGHTS</span></h1>
+  <p class="hero-sub">A personal collection of moments worth rewatching.</p>
+  <div class="hero-ctas">
+    <a href="#kacky" class="cta cta-k">KACKY</a>
+    <a href="#rl"    class="cta cta-r">ROCKET LEAGUE</a>
+    <a href="#cod"   class="cta cta-c">CALL OF DUTY</a>
+  </div>
+  <div class="scroll-cue">SCROLL</div>
+</div>
+
+
+<!-- ══════════ KACKY ══════════ -->
+<div class="divider-animated divider-kacky"></div>
+<section id="kacky" class="s-kacky">
+  <div class="sec-hdr">
+    <div class="sec-icon"><img src="https://www.trackmania.com/build/images/tm-logo.9b809b61.png" alt="Trackmania" style="width:80%;object-fit:contain;filter:brightness(0) invert(1);"></div>
+    <div class="sec-meta">
+      <div class="sec-label">TRACKMANIA — KACKY EVENTS</div>
+      <h2 class="sec-title">KACKY</h2>
+    </div>
+    <div class="sec-count" id="kacky-count"></div>
+  </div>
+
+  <!-- EVENT TABS
+       ADD A NEW EVENT: add a <button class="etab" data-event="your-key">NAME</button>
+       then use data-event="your-key" on the matching map cards. -->
+  <div class="event-tabs">
+    <button class="etab active" data-event="all">ALL EVENTS</button>
+    <button class="etab" data-event="kr6">KACKY RELOADED 6</button>
+    <button class="etab" data-event="kk10">KACKIEST KACKY 10</button>
+    <button class="etab" data-event="kb2">KACKY BOLETED 2</button>
+    <button class="etab" data-event="km4">KACKY REMIXED 4</button>
+  </div>
+
+  <div class="kacky-grid">
+    <!-- ADD A CLIP: copy a map-card block, set data-event / data-yt-id / data-map / data-name -->
+
+    <div class="map-card" data-event="kr6" data-id="kr6-376" data-yt-id="nkHgc0ivuqM" data-map="KR #376" data-name="Kacky Reloaded #376">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/nkHgc0ivuqM/maxresdefault.jpg" alt="KR #376" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #376</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #376</div>
+        <div class="map-name">Kacky Reloaded #376</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-377" data-yt-id="xcx12LB-NSg" data-map="KR #377" data-name="Kacky Reloaded #377">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/xcx12LB-NSg/maxresdefault.jpg" alt="KR #377" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #377</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #377</div>
+        <div class="map-name">Kacky Reloaded #377</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-378" data-yt-id="DY5B36O_jJk" data-map="KR #378" data-name="Kacky Reloaded #378">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/DY5B36O_jJk/maxresdefault.jpg" alt="KR #378" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #378</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #378</div>
+        <div class="map-name">Kacky Reloaded #378</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-379" data-yt-id="adHI3kDt110" data-map="KR #379" data-name="Kacky Reloaded #379">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/adHI3kDt110/maxresdefault.jpg" alt="KR #379" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #379</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #379</div>
+        <div class="map-name">Kacky Reloaded #379</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-380" data-yt-id="kMZL870h2Yc" data-map="KR #380" data-name="Kacky Reloaded #380">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/kMZL870h2Yc/maxresdefault.jpg" alt="KR #380" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #380</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #380</div>
+        <div class="map-name">Kacky Reloaded #380</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-386" data-yt-id="F_XCsMPONHM" data-map="KR #386" data-name="Kacky Reloaded #386">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/F_XCsMPONHM/maxresdefault.jpg" alt="KR #386" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #386</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #386</div>
+        <div class="map-name">Kacky Reloaded #386</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-387" data-yt-id="RtiTCGsIs4Q" data-map="KR #387" data-name="Kacky Reloaded #387">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/RtiTCGsIs4Q/maxresdefault.jpg" alt="KR #387" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #387</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #387</div>
+        <div class="map-name">Kacky Reloaded #387</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-394" data-yt-id="M4s-6zSGrNY" data-map="KR #394" data-name="Kacky Reloaded #394">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/M4s-6zSGrNY/maxresdefault.jpg" alt="KR #394" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #394</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #394</div>
+        <div class="map-name">Kacky Reloaded #394</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-402" data-yt-id="EaT0SN5_0xo" data-map="KR #402" data-name="Kacky Reloaded #402">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/EaT0SN5_0xo/maxresdefault.jpg" alt="KR #402" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #402</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #402</div>
+        <div class="map-name">Kacky Reloaded #402</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-403" data-yt-id="C3nHXfC_c5I" data-map="KR #403" data-name="Kacky Reloaded #403">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/C3nHXfC_c5I/maxresdefault.jpg" alt="KR #403" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #403</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #403</div>
+        <div class="map-name">Kacky Reloaded #403</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-404" data-yt-id="zkcJbAEuFj0" data-map="KR #404" data-name="Kacky Reloaded #404">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/zkcJbAEuFj0/maxresdefault.jpg" alt="KR #404" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #404</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #404</div>
+        <div class="map-name">Kacky Reloaded #404</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-406" data-yt-id="VWLcV_Xnl7k" data-map="KR #406" data-name="Kacky Reloaded #406">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/VWLcV_Xnl7k/maxresdefault.jpg" alt="KR #406" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #406</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #406</div>
+        <div class="map-name">Kacky Reloaded #406</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-410" data-yt-id="Y61VQuPDCjw" data-map="KR #410" data-name="Kacky Reloaded #410">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Y61VQuPDCjw/maxresdefault.jpg" alt="KR #410" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #410</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #410</div>
+        <div class="map-name">Kacky Reloaded #410</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-420" data-yt-id="2lRpPfjNguI" data-map="KR #420" data-name="Kacky Reloaded #420">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/2lRpPfjNguI/maxresdefault.jpg" alt="KR #420" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #420</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #420</div>
+        <div class="map-name">Kacky Reloaded #420</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-422" data-yt-id="e4S8CVOY_Og" data-map="KR #422" data-name="Kacky Reloaded #422">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/e4S8CVOY_Og/maxresdefault.jpg" alt="KR #422" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #422</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #422</div>
+        <div class="map-name">Kacky Reloaded #422</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-423" data-yt-id="rnMOn592i9s" data-map="KR #423" data-name="Kacky Reloaded #423">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/rnMOn592i9s/maxresdefault.jpg" alt="KR #423" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #423</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #423</div>
+        <div class="map-name">Kacky Reloaded #423</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-429" data-yt-id="Xgy40Ro1bqA" data-map="KR #429" data-name="Kacky Reloaded #429">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Xgy40Ro1bqA/maxresdefault.jpg" alt="KR #429" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #429</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #429</div>
+        <div class="map-name">Kacky Reloaded #429</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-434" data-yt-id="fsNcLQbBy7g" data-map="KR #434" data-name="Kacky Reloaded #434">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/fsNcLQbBy7g/maxresdefault.jpg" alt="KR #434" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #434</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #434</div>
+        <div class="map-name">Kacky Reloaded #434</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-437" data-yt-id="cJtJK3bbsKU" data-map="KR #437" data-name="Kacky Reloaded #437">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/cJtJK3bbsKU/maxresdefault.jpg" alt="KR #437" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #437</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #437</div>
+        <div class="map-name">Kacky Reloaded #437</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-438" data-yt-id="NSPlPxKMFxY" data-map="KR #438" data-name="Kacky Reloaded #438">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/NSPlPxKMFxY/maxresdefault.jpg" alt="KR #438" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #438</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #438</div>
+        <div class="map-name">Kacky Reloaded #438</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-440" data-yt-id="G6BzOi3qaTA" data-map="KR #440" data-name="Kacky Reloaded #440">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/G6BzOi3qaTA/maxresdefault.jpg" alt="KR #440" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #440</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #440</div>
+        <div class="map-name">Kacky Reloaded #440</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-441" data-yt-id="Tz7BmX3tybU" data-map="KR #441" data-name="Kacky Reloaded #441">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Tz7BmX3tybU/maxresdefault.jpg" alt="KR #441" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #441</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #441</div>
+        <div class="map-name">Kacky Reloaded #441</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-442" data-yt-id="mOVuJsXBnnM" data-map="KR #442" data-name="Kacky Reloaded #442">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/mOVuJsXBnnM/maxresdefault.jpg" alt="KR #442" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #442</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #442</div>
+        <div class="map-name">Kacky Reloaded #442</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-443" data-yt-id="RdXadGSHziA" data-map="KR #443" data-name="Kacky Reloaded #443">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/RdXadGSHziA/maxresdefault.jpg" alt="KR #443" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #443</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #443</div>
+        <div class="map-name">Kacky Reloaded #443</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-446" data-yt-id="K2hull-20-4" data-map="KR #446" data-name="Kacky Reloaded #446">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/K2hull-20-4/maxresdefault.jpg" alt="KR #446" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #446</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #446</div>
+        <div class="map-name">Kacky Reloaded #446</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kr6" data-id="kr6-447" data-yt-id="4DOAEJmFeHM" data-map="KR #447" data-name="Kacky Reloaded #447">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/4DOAEJmFeHM/maxresdefault.jpg" alt="KR #447" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #447</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #447</div>
+        <div class="map-name">Kacky Reloaded #447</div>
+        <div class="map-tags"></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <!-- ── KACKIEST KACKY 10 (demo — replace with your real clips) ── -->
+
+    <!-- ── KACKY BOLETED 2 (demo — replace with your real clips) ── -->
+    <div class="map-card" data-event="kr6" data-id="kr6-450" data-yt-id="YtXFSM0SBUg" data-map="KR #450" data-name="Kacky Reloaded #450">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/YtXFSM0SBUg/maxresdefault.jpg" alt="KR #450" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KR #450</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY RELOADED 6</span>
+        <div class="map-num">KR #450</div>
+        <div class="map-name">Kacky Reloaded #450</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kk10" data-id="kk10-329" data-yt-id="JlC7tLBro24" data-map="KK #329" data-name="Kackiest Kacky #329">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/JlC7tLBro24/maxresdefault.jpg" alt="KK #329" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #329</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #329</div>
+        <div class="map-name">Kackiest Kacky #329</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-331" data-yt-id="XEVg_XgLDXg" data-map="KK #331" data-name="Kackiest Kacky #331">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/XEVg_XgLDXg/maxresdefault.jpg" alt="KK #331" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #331</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #331</div>
+        <div class="map-name">Kackiest Kacky #331</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-339" data-yt-id="qKiuAJuNWNo" data-map="KK #339" data-name="Kackiest Kacky #339">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/qKiuAJuNWNo/maxresdefault.jpg" alt="KK #339" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #339</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #339</div>
+        <div class="map-name">Kackiest Kacky #339</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-341" data-yt-id="7AoDwZVYzRk" data-map="KK #341" data-name="Kackiest Kacky #341">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/7AoDwZVYzRk/maxresdefault.jpg" alt="KK #341" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #341</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #341</div>
+        <div class="map-name">Kackiest Kacky #341</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-345" data-yt-id="GMIU80B1nPI" data-map="KK #345" data-name="Kackiest Kacky #345">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/GMIU80B1nPI/maxresdefault.jpg" alt="KK #345" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #345</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #345</div>
+        <div class="map-name">Kackiest Kacky #345</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-349" data-yt-id="WPTVMRe6RaU" data-map="KK #349" data-name="Kackiest Kacky #349">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/WPTVMRe6RaU/maxresdefault.jpg" alt="KK #349" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #349</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #349</div>
+        <div class="map-name">Kackiest Kacky #349</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-350" data-yt-id="6gX4keGQbaY" data-map="KK #350" data-name="Kackiest Kacky #350">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/6gX4keGQbaY/maxresdefault.jpg" alt="KK #350" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #350</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #350</div>
+        <div class="map-name">Kackiest Kacky #350</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-365" data-yt-id="hmf9EfFZI4Y" data-map="KK #365" data-name="Kackiest Kacky #365">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/hmf9EfFZI4Y/maxresdefault.jpg" alt="KK #365" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #365</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #365</div>
+        <div class="map-name">Kackiest Kacky #365</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-372" data-yt-id="ScgGjc-YqUg" data-map="KK #372" data-name="Kackiest Kacky #372">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/ScgGjc-YqUg/maxresdefault.jpg" alt="KK #372" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #372</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #372</div>
+        <div class="map-name">Kackiest Kacky #372</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-378" data-yt-id="QwfqtFKWNy4" data-map="KK #378" data-name="Kackiest Kacky #378">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/QwfqtFKWNy4/maxresdefault.jpg" alt="KK #378" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #378</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #378</div>
+        <div class="map-name">Kackiest Kacky #378</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-379" data-yt-id="z5tSvqM2Jes" data-map="KK #379" data-name="Kackiest Kacky #379">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/z5tSvqM2Jes/maxresdefault.jpg" alt="KK #379" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #379</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #379</div>
+        <div class="map-name">Kackiest Kacky #379</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-380" data-yt-id="FTy4vJCGx8M" data-map="KK #380" data-name="Kackiest Kacky #380">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/FTy4vJCGx8M/maxresdefault.jpg" alt="KK #380" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #380</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #380</div>
+        <div class="map-name">Kackiest Kacky #380</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-383" data-yt-id="x6gikDc6GXw" data-map="KK #383" data-name="Kackiest Kacky #383">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/x6gikDc6GXw/maxresdefault.jpg" alt="KK #383" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #383</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #383</div>
+        <div class="map-name">Kackiest Kacky #383</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-384" data-yt-id="Ymw0vaj1RwY" data-map="KK #384" data-name="Kackiest Kacky #384">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Ymw0vaj1RwY/maxresdefault.jpg" alt="KK #384" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #384</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #384</div>
+        <div class="map-name">Kackiest Kacky #384</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-392" data-yt-id="N3390M_zVbw" data-map="KK #392" data-name="Kackiest Kacky #392">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/N3390M_zVbw/maxresdefault.jpg" alt="KK #392" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #392</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #392</div>
+        <div class="map-name">Kackiest Kacky #392</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-401" data-yt-id="K8fgh_Fa4yQ" data-map="KK #401" data-name="Kackiest Kacky #401">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/K8fgh_Fa4yQ/maxresdefault.jpg" alt="KK #401" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #401</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #401</div>
+        <div class="map-name">Kackiest Kacky #401</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-404" data-yt-id="vVyERv6kXZ8" data-map="KK #404" data-name="Kackiest Kacky #404">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/vVyERv6kXZ8/maxresdefault.jpg" alt="KK #404" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #404</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #404</div>
+        <div class="map-name">Kackiest Kacky #404</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-405" data-yt-id="P5xvNmnBMNs" data-map="KK #405" data-name="Kackiest Kacky #405">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/P5xvNmnBMNs/maxresdefault.jpg" alt="KK #405" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #405</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #405</div>
+        <div class="map-name">Kackiest Kacky #405</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-406" data-yt-id="NbKk1QuicA4" data-map="KK #406" data-name="Kackiest Kacky #406">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/NbKk1QuicA4/maxresdefault.jpg" alt="KK #406" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #406</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #406</div>
+        <div class="map-name">Kackiest Kacky #406</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-407" data-yt-id="iuHyjXHlFpI" data-map="KK #407" data-name="Kackiest Kacky #407">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/iuHyjXHlFpI/maxresdefault.jpg" alt="KK #407" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #407</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #407</div>
+        <div class="map-name">Kackiest Kacky #407</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-409" data-yt-id="AXIkfzs3WuU" data-map="KK #409" data-name="Kackiest Kacky #409">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/AXIkfzs3WuU/maxresdefault.jpg" alt="KK #409" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #409</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #409</div>
+        <div class="map-name">Kackiest Kacky #409</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-412" data-yt-id="o8_Z_HORR6Q" data-map="KK #412" data-name="Kackiest Kacky #412">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/o8_Z_HORR6Q/maxresdefault.jpg" alt="KK #412" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #412</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #412</div>
+        <div class="map-name">Kackiest Kacky #412</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-413" data-yt-id="wDs_-xSVCIM" data-map="KK #413" data-name="Kackiest Kacky #413">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/wDs_-xSVCIM/maxresdefault.jpg" alt="KK #413" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #413</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #413</div>
+        <div class="map-name">Kackiest Kacky #413</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-414" data-yt-id="vJf8krwmHbY" data-map="KK #414" data-name="Kackiest Kacky #414">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/vJf8krwmHbY/maxresdefault.jpg" alt="KK #414" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #414</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #414</div>
+        <div class="map-name">Kackiest Kacky #414</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kk10" data-id="kk10-417" data-yt-id="YHLfdZ1jm7c" data-map="KK #417" data-name="Kackiest Kacky #417">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/YHLfdZ1jm7c/maxresdefault.jpg" alt="KK #417" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KK #417</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKIEST KACKY 10</span>
+        <div class="map-num">KK #417</div>
+        <div class="map-name">Kackiest Kacky #417</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kb2" data-yt-id="dQw4w9WgXcQ" data-map="KB #002" data-name="Kacky Boleted #2">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="KB #002" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #002</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #002</div>
+        <div class="map-name">Kacky Boleted #2</div>
+        <div class="map-tags"><span class="map-tag">FIRST FINISH</span></div>
+      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
+    </div>
+
+    <div class="map-card" data-event="kb2" data-yt-id="dQw4w9WgXcQ" data-map="KB #009" data-name="Kacky Boleted #9"
+      data-bonus='[{"ytId":"dQw4w9WgXcQ","title":"Campaign PB"}]'>
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="KB #009" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #009</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #009</div>
+        <div class="map-name">Kacky Boleted #9</div>
+        <div class="map-tags"><span class="map-tag">TOP RUN</span><span class="map-tag">PB</span></div>
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-202" data-yt-id="0hXrc68GJk4" data-map="KM #202" data-name="Kacky Remixed #202">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/0hXrc68GJk4/maxresdefault.jpg" alt="KM #202" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #202</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #202</div>
+        <div class="map-name">Kacky Remixed #202</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-204" data-yt-id="_WT5PtQZ0-0" data-map="KM #204" data-name="Kacky Remixed #204">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/_WT5PtQZ0-0/maxresdefault.jpg" alt="KM #204" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #204</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #204</div>
+        <div class="map-name">Kacky Remixed #204</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-206" data-yt-id="kpCvVGysubY" data-map="KM #206" data-name="Kacky Remixed #206">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/kpCvVGysubY/maxresdefault.jpg" alt="KM #206" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #206</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #206</div>
+        <div class="map-name">Kacky Remixed #206</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-208" data-yt-id="8r8anvvyCXY" data-map="KM #208" data-name="Kacky Remixed #208">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/8r8anvvyCXY/maxresdefault.jpg" alt="KM #208" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #208</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #208</div>
+        <div class="map-name">Kacky Remixed #208</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-209" data-yt-id="Q0ZmMHlkIzA" data-map="KM #209" data-name="Kacky Remixed #209">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Q0ZmMHlkIzA/maxresdefault.jpg" alt="KM #209" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #209</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #209</div>
+        <div class="map-name">Kacky Remixed #209</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-210" data-yt-id="e5WltqT3It4" data-map="KM #210" data-name="Kacky Remixed #210">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/e5WltqT3It4/maxresdefault.jpg" alt="KM #210" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #210</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #210</div>
+        <div class="map-name">Kacky Remixed #210</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-212" data-yt-id="JKdb-qfr_Ok" data-map="KM #212" data-name="Kacky Remixed #212">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/JKdb-qfr_Ok/maxresdefault.jpg" alt="KM #212" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #212</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #212</div>
+        <div class="map-name">Kacky Remixed #212</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-214" data-yt-id="pLLbWEavSIo" data-map="KM #214" data-name="Kacky Remixed #214">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/pLLbWEavSIo/maxresdefault.jpg" alt="KM #214" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #214</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #214</div>
+        <div class="map-name">Kacky Remixed #214</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-216" data-yt-id="VkMo4xoM7nc" data-map="KM #216" data-name="Kacky Remixed #216">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/VkMo4xoM7nc/maxresdefault.jpg" alt="KM #216" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #216</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #216</div>
+        <div class="map-name">Kacky Remixed #216</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-217" data-yt-id="knCGQ0HCrlA" data-map="KM #217" data-name="Kacky Remixed #217">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/knCGQ0HCrlA/maxresdefault.jpg" alt="KM #217" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #217</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #217</div>
+        <div class="map-name">Kacky Remixed #217</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-218" data-yt-id="zBZZA9yEUP0" data-map="KM #218" data-name="Kacky Remixed #218">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/zBZZA9yEUP0/maxresdefault.jpg" alt="KM #218" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #218</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #218</div>
+        <div class="map-name">Kacky Remixed #218</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-219" data-yt-id="hs6lPkAUoBw" data-map="KM #219" data-name="Kacky Remixed #219">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/hs6lPkAUoBw/maxresdefault.jpg" alt="KM #219" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #219</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #219</div>
+        <div class="map-name">Kacky Remixed #219</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-222" data-yt-id="JpVZqxsatD4" data-map="KM #222" data-name="Kacky Remixed #222">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/JpVZqxsatD4/maxresdefault.jpg" alt="KM #222" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #222</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #222</div>
+        <div class="map-name">Kacky Remixed #222</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-224" data-yt-id="hTFz9S-n9NM" data-map="KM #224" data-name="Kacky Remixed #224">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/hTFz9S-n9NM/maxresdefault.jpg" alt="KM #224" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #224</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #224</div>
+        <div class="map-name">Kacky Remixed #224</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-225" data-yt-id="-W0wwtAkAC4" data-map="KM #225" data-name="Kacky Remixed #225">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/-W0wwtAkAC4/maxresdefault.jpg" alt="KM #225" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #225</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #225</div>
+        <div class="map-name">Kacky Remixed #225</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-227" data-yt-id="btNxOfM3UHM" data-map="KM #227" data-name="Kacky Remixed #227">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/btNxOfM3UHM/maxresdefault.jpg" alt="KM #227" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #227</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #227</div>
+        <div class="map-name">Kacky Remixed #227</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-228" data-yt-id="7MDtOTWg95U" data-map="KM #228" data-name="Kacky Remixed #228">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/7MDtOTWg95U/maxresdefault.jpg" alt="KM #228" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #228</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #228</div>
+        <div class="map-name">Kacky Remixed #228</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-231" data-yt-id="LQi3Rnr2BmE" data-map="KM #231" data-name="Kacky Remixed #231">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/LQi3Rnr2BmE/maxresdefault.jpg" alt="KM #231" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #231</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #231</div>
+        <div class="map-name">Kacky Remixed #231</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-232" data-yt-id="T1oo4M5Z5_8" data-map="KM #232" data-name="Kacky Remixed #232">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/T1oo4M5Z5_8/maxresdefault.jpg" alt="KM #232" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #232</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #232</div>
+        <div class="map-name">Kacky Remixed #232</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-233" data-yt-id="ld5NxbzD27o" data-map="KM #233" data-name="Kacky Remixed #233">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/ld5NxbzD27o/maxresdefault.jpg" alt="KM #233" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #233</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #233</div>
+        <div class="map-name">Kacky Remixed #233</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-235" data-yt-id="ATZWb4TZxv0" data-map="KM #235" data-name="Kacky Remixed #235">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/ATZWb4TZxv0/maxresdefault.jpg" alt="KM #235" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #235</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #235</div>
+        <div class="map-name">Kacky Remixed #235</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-236" data-yt-id="TcZoco8nVr0" data-map="KM #236" data-name="Kacky Remixed #236">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/TcZoco8nVr0/maxresdefault.jpg" alt="KM #236" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #236</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #236</div>
+        <div class="map-name">Kacky Remixed #236</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-237" data-yt-id="hhc-WIsFwiA" data-map="KM #237" data-name="Kacky Remixed #237">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/hhc-WIsFwiA/maxresdefault.jpg" alt="KM #237" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #237</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #237</div>
+        <div class="map-name">Kacky Remixed #237</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-238" data-yt-id="LZ80TgdGamI" data-map="KM #238" data-name="Kacky Remixed #238">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/LZ80TgdGamI/maxresdefault.jpg" alt="KM #238" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #238</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #238</div>
+        <div class="map-name">Kacky Remixed #238</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-240" data-yt-id="qk-lywCSefo" data-map="KM #240" data-name="Kacky Remixed #240">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/qk-lywCSefo/maxresdefault.jpg" alt="KM #240" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #240</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #240</div>
+        <div class="map-name">Kacky Remixed #240</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-242" data-yt-id="AQ8xbR5g9l4" data-map="KM #242" data-name="Kacky Remixed #242">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/AQ8xbR5g9l4/maxresdefault.jpg" alt="KM #242" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #242</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #242</div>
+        <div class="map-name">Kacky Remixed #242</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-244" data-yt-id="rFHdL0hprVY" data-map="KM #244" data-name="Kacky Remixed #244">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/rFHdL0hprVY/maxresdefault.jpg" alt="KM #244" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #244</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #244</div>
+        <div class="map-name">Kacky Remixed #244</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-245" data-yt-id="dRrXMu621s0" data-map="KM #245" data-name="Kacky Remixed #245">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/dRrXMu621s0/maxresdefault.jpg" alt="KM #245" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #245</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #245</div>
+        <div class="map-name">Kacky Remixed #245</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-247" data-yt-id="9HnptR0bNQA" data-map="KM #247" data-name="Kacky Remixed #247">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/9HnptR0bNQA/maxresdefault.jpg" alt="KM #247" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #247</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #247</div>
+        <div class="map-name">Kacky Remixed #247</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-249" data-yt-id="xSaQVMtDC-I" data-map="KM #249" data-name="Kacky Remixed #249">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/xSaQVMtDC-I/maxresdefault.jpg" alt="KM #249" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #249</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #249</div>
+        <div class="map-name">Kacky Remixed #249</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-250" data-yt-id="VuiQe0WhrCE" data-map="KM #250" data-name="Kacky Remixed #250">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/VuiQe0WhrCE/maxresdefault.jpg" alt="KM #250" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #250</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #250</div>
+        <div class="map-name">Kacky Remixed #250</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-251" data-yt-id="kENEIMhoDw8" data-map="KM #251" data-name="Kacky Remixed #251">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/kENEIMhoDw8/maxresdefault.jpg" alt="KM #251" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #251</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #251</div>
+        <div class="map-name">Kacky Remixed #251</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-252" data-yt-id="viPL1wWGqhU" data-map="KM #252" data-name="Kacky Remixed #252">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/viPL1wWGqhU/maxresdefault.jpg" alt="KM #252" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #252</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #252</div>
+        <div class="map-name">Kacky Remixed #252</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-253" data-yt-id="Pfx-YRf9qmU" data-map="KM #253" data-name="Kacky Remixed #253">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Pfx-YRf9qmU/maxresdefault.jpg" alt="KM #253" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #253</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #253</div>
+        <div class="map-name">Kacky Remixed #253</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-257" data-yt-id="51oczOg-ryQ" data-map="KM #257" data-name="Kacky Remixed #257">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/51oczOg-ryQ/maxresdefault.jpg" alt="KM #257" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #257</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #257</div>
+        <div class="map-name">Kacky Remixed #257</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-260" data-yt-id="QI35s7EqiVY" data-map="KM #260" data-name="Kacky Remixed #260">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/QI35s7EqiVY/maxresdefault.jpg" alt="KM #260" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #260</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #260</div>
+        <div class="map-name">Kacky Remixed #260</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-261" data-yt-id="yS4lx9ljTDI" data-map="KM #261" data-name="Kacky Remixed #261">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/yS4lx9ljTDI/maxresdefault.jpg" alt="KM #261" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #261</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #261</div>
+        <div class="map-name">Kacky Remixed #261</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-262" data-yt-id="xR6aE8aqGoQ" data-map="KM #262" data-name="Kacky Remixed #262">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/xR6aE8aqGoQ/maxresdefault.jpg" alt="KM #262" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #262</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #262</div>
+        <div class="map-name">Kacky Remixed #262</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-265" data-yt-id="qQB-3P4yMas" data-map="KM #265" data-name="Kacky Remixed #265">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/qQB-3P4yMas/maxresdefault.jpg" alt="KM #265" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #265</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #265</div>
+        <div class="map-name">Kacky Remixed #265</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-268" data-yt-id="azz8FH_iuvI" data-map="KM #268" data-name="Kacky Remixed #268">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/azz8FH_iuvI/maxresdefault.jpg" alt="KM #268" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #268</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #268</div>
+        <div class="map-name">Kacky Remixed #268</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-269" data-yt-id="JAngtDlepQ4" data-map="KM #269" data-name="Kacky Remixed #269">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/JAngtDlepQ4/maxresdefault.jpg" alt="KM #269" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #269</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #269</div>
+        <div class="map-name">Kacky Remixed #269</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-270" data-yt-id="hj0O0Q8rijY" data-map="KM #270" data-name="Kacky Remixed #270">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/hj0O0Q8rijY/maxresdefault.jpg" alt="KM #270" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #270</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #270</div>
+        <div class="map-name">Kacky Remixed #270</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-271" data-yt-id="F_Ctc896D2c" data-map="KM #271" data-name="Kacky Remixed #271">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/F_Ctc896D2c/maxresdefault.jpg" alt="KM #271" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #271</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #271</div>
+        <div class="map-name">Kacky Remixed #271</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-272" data-yt-id="6oEcVJZMMBk" data-map="KM #272" data-name="Kacky Remixed #272">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/6oEcVJZMMBk/maxresdefault.jpg" alt="KM #272" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #272</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #272</div>
+        <div class="map-name">Kacky Remixed #272</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-273" data-yt-id="ZpHPuF2H4tc" data-map="KM #273" data-name="Kacky Remixed #273">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/ZpHPuF2H4tc/maxresdefault.jpg" alt="KM #273" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #273</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #273</div>
+        <div class="map-name">Kacky Remixed #273</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-276" data-yt-id="dPXdgThZjcs" data-map="KM #276" data-name="Kacky Remixed #276">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/dPXdgThZjcs/maxresdefault.jpg" alt="KM #276" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #276</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #276</div>
+        <div class="map-name">Kacky Remixed #276</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-279" data-yt-id="rXRxh7DFY9Y" data-map="KM #279" data-name="Kacky Remixed #279">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/rXRxh7DFY9Y/maxresdefault.jpg" alt="KM #279" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #279</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #279</div>
+        <div class="map-name">Kacky Remixed #279</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-280" data-yt-id="bCNx5wdl9jg" data-map="KM #280" data-name="Kacky Remixed #280">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/bCNx5wdl9jg/maxresdefault.jpg" alt="KM #280" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #280</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #280</div>
+        <div class="map-name">Kacky Remixed #280</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-281" data-yt-id="4Pp4OqubmbA" data-map="KM #281" data-name="Kacky Remixed #281">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/4Pp4OqubmbA/maxresdefault.jpg" alt="KM #281" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #281</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #281</div>
+        <div class="map-name">Kacky Remixed #281</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-284" data-yt-id="PpETUZViWIk" data-map="KM #284" data-name="Kacky Remixed #284">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/PpETUZViWIk/maxresdefault.jpg" alt="KM #284" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #284</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #284</div>
+        <div class="map-name">Kacky Remixed #284</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-287" data-yt-id="pAWlmrx-_lg" data-map="KM #287" data-name="Kacky Remixed #287">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/pAWlmrx-_lg/maxresdefault.jpg" alt="KM #287" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #287</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #287</div>
+        <div class="map-name">Kacky Remixed #287</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-288" data-yt-id="UMXV08sabtE" data-map="KM #288" data-name="Kacky Remixed #288">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/UMXV08sabtE/maxresdefault.jpg" alt="KM #288" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #288</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #288</div>
+        <div class="map-name">Kacky Remixed #288</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-289" data-yt-id="2-1cBUhGmFg" data-map="KM #289" data-name="Kacky Remixed #289">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/2-1cBUhGmFg/maxresdefault.jpg" alt="KM #289" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #289</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #289</div>
+        <div class="map-name">Kacky Remixed #289</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-290" data-yt-id="SJaHv0rkFyk" data-map="KM #290" data-name="Kacky Remixed #290">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/SJaHv0rkFyk/maxresdefault.jpg" alt="KM #290" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #290</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #290</div>
+        <div class="map-name">Kacky Remixed #290</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-291" data-yt-id="lXmACVI_ULQ" data-map="KM #291" data-name="Kacky Remixed #291">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/lXmACVI_ULQ/maxresdefault.jpg" alt="KM #291" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #291</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #291</div>
+        <div class="map-name">Kacky Remixed #291</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-292" data-yt-id="iFjRDFt15EQ" data-map="KM #292" data-name="Kacky Remixed #292">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/iFjRDFt15EQ/maxresdefault.jpg" alt="KM #292" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #292</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #292</div>
+        <div class="map-name">Kacky Remixed #292</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-293" data-yt-id="EsDJRf7IINg" data-map="KM #293" data-name="Kacky Remixed #293">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/EsDJRf7IINg/maxresdefault.jpg" alt="KM #293" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #293</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #293</div>
+        <div class="map-name">Kacky Remixed #293</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-294" data-yt-id="tzCd1y3azwQ" data-map="KM #294" data-name="Kacky Remixed #294">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/tzCd1y3azwQ/maxresdefault.jpg" alt="KM #294" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #294</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #294</div>
+        <div class="map-name">Kacky Remixed #294</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-295" data-yt-id="Mpof_hkqqhs" data-map="KM #295" data-name="Kacky Remixed #295">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Mpof_hkqqhs/maxresdefault.jpg" alt="KM #295" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #295</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #295</div>
+        <div class="map-name">Kacky Remixed #295</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-296" data-yt-id="QLdsypY-iWA" data-map="KM #296" data-name="Kacky Remixed #296">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/QLdsypY-iWA/maxresdefault.jpg" alt="KM #296" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #296</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #296</div>
+        <div class="map-name">Kacky Remixed #296</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-297" data-yt-id="XQRaU3M7j_A" data-map="KM #297" data-name="Kacky Remixed #297">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/XQRaU3M7j_A/maxresdefault.jpg" alt="KM #297" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #297</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #297</div>
+        <div class="map-name">Kacky Remixed #297</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-298" data-yt-id="GV9CLZ_9RrY" data-map="KM #298" data-name="Kacky Remixed #298">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/GV9CLZ_9RrY/maxresdefault.jpg" alt="KM #298" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #298</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #298</div>
+        <div class="map-name">Kacky Remixed #298</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="km4" data-id="km4-300" data-yt-id="94cKmhWPxk0" data-map="KM #300" data-name="Kacky Remixed #300">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/94cKmhWPxk0/maxresdefault.jpg" alt="KM #300" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KM #300</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY REMIXED 4</span>
+        <div class="map-num">KM #300</div>
+        <div class="map-name">Kacky Remixed #300</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ ROCKET LEAGUE ══════════ -->
+
+<div class="divider-animated divider-rl"></div>
+<section id="rl" class="s-rl">
+  <div class="sec-hdr">
+    <div class="sec-icon"><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/252950/logo.png" alt="Rocket League" style="width:80%;object-fit:contain;filter:brightness(0) invert(1);"></div>
+    <div class="sec-meta">
+      <div class="sec-label">PSYONIX — ROCKET LEAGUE</div>
+      <h2 class="sec-title">ROCKET LEAGUE</h2>
+    </div>
+    <div class="sec-count" id="rl-count"></div>
+  </div>
+
+  <!-- RL TABS
+       ADD A NEW CATEGORY: add a <button class="rl-tab" data-cat="your-key">NAME</button>
+       then use data-cat="your-key" on the matching rl-card elements. -->
+  <div class="rl-tabs">
+    <button class="rl-tab active" data-cat="all">ALL</button>
+    <button class="rl-tab" data-cat="episodes">EPISODES</button>
+    <button class="rl-tab" data-cat="best">BEST CLIPS</button>
+    <button class="rl-tab" data-cat="leftover">LEFTOVER</button>
+  </div>
+
+  <div class="rl-grid">
+    <!-- ADD A CLIP: copy an rl-card block, set data-cat, data-yt-id, update img src, title and meta -->
+
+    <div class="rl-card" data-cat="episodes" data-yt-id="dQw4w9WgXcQ">
+      <div class="rl-bar"></div>
+      <div class="rl-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="RL Clip">
+        <div class="rl-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+      </div>
+      <div class="rl-info">
+        <div class="rl-title">Insane wall aerial</div>
+        <div class="rl-meta">RANKED 3v3 // CHAMPION II</div>
+      </div>
+    </div>
+
+    <div class="rl-card" data-cat="best" data-yt-id="dQw4w9WgXcQ">
+      <div class="rl-bar"></div>
+      <div class="rl-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="RL Clip">
+        <div class="rl-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+      </div>
+      <div class="rl-info">
+        <div class="rl-title">Double touch in OT clutch</div>
+        <div class="rl-meta">RANKED 2v2 // DIAMOND III</div>
+      </div>
+    </div>
+
+    <div class="rl-card" data-cat="leftover" data-yt-id="dQw4w9WgXcQ">
+      <div class="rl-bar"></div>
+      <div class="rl-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="RL Clip">
+        <div class="rl-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+      </div>
+      <div class="rl-info">
+        <div class="rl-title">Perfect musty flick</div>
+        <div class="rl-meta">RANKED 1v1 // PLATINUM I</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ CALL OF DUTY ══════════ -->
+<div class="divider-animated divider-cod"></div>
+<section id="cod" class="s-cod">
+  <div class="sec-hdr">
+    <div class="sec-icon"><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/logo.png" alt="Call of Duty" style="width:80%;object-fit:contain;filter:brightness(0) invert(1);"></div>
+    <div class="sec-meta">
+      <div class="sec-label">ACTIVISION — CALL OF DUTY</div>
+      <h2 class="sec-title">CALL OF DUTY</h2>
+    </div>
+    <div class="sec-count" id="cod-count"></div>
+  </div>
+
+  <div class="cod-list">
+    <!-- ADD A CLIP: copy a cod-row block, update data-yt-id, cod-idx, cod-title, cod-sub -->
+
+    <div class="cod-row" data-yt-id="dQw4w9WgXcQ">
+      <div class="cod-idx">01</div>
+      <div><div class="cod-title">10 kill streak — solo ranked</div><div class="cod-sub">WARZONE // VERDANSK // SOLO RANKED</div></div>
+      <div class="cod-btn">▶ PLAY</div>
+    </div>
+
+    <div class="cod-row" data-yt-id="dQw4w9WgXcQ">
+      <div class="cod-idx">02</div>
+      <div><div class="cod-title">Cross-map no-scope</div><div class="cod-sub">MULTIPLAYER // SHIPMENT // TDM</div></div>
+      <div class="cod-btn">▶ PLAY</div>
+    </div>
+
+    <div class="cod-row" data-yt-id="dQw4w9WgXcQ">
+      <div class="cod-idx">03</div>
+      <div><div class="cod-title">1v4 clutch late night</div><div class="cod-sub">WARZONE // RESURGENCE // SQUAD</div></div>
+      <div class="cod-btn">▶ PLAY</div>
+    </div>
+
+    <div class="cod-row" data-yt-id="dQw4w9WgXcQ">
+      <div class="cod-idx">04</div>
+      <div><div class="cod-title">Nuke in ranked — WTFFFF</div><div class="cod-sub">MULTIPLAYER // S&amp;D // RANKED</div></div>
+      <div class="cod-btn">▶ PLAY</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-sub"  id="modal-sub"></div>
+        <div class="modal-name" id="modal-name"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
+    </div>
+    <div class="modal-vid">
+      <iframe id="modal-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <!-- BONUS CLIPS — shown only when a map has bonus clips defined -->
+    <div class="modal-bonus" id="modal-bonus">
+      <div class="modal-bonus-label">// RELATED CLIPS</div>
+      <div class="bonus-list" id="bonus-list"></div>
+    </div>
+    <!-- RELATED CLIPS — shown when a map has remix/original links -->
+    <div class="modal-related" id="modal-related">
+      <div class="modal-related-label">// SEE ALSO</div>
+      <div class="modal-related-links" id="modal-related-links"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">MY<em>.</em>CLIPS</div>
+  <div class="f-sub">MADE FOR THE LOVE OF GAMING</div>
+</footer>
+
+<script>
+    function buildEmbedUrl(ytId) {
+      return 'https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&rel=0';
+    }
+  function openModal(ytId, name, sub, bonus, related) {
+    document.getElementById('modal-frame').src = buildEmbedUrl(ytId);
+    document.getElementById('modal-name').textContent = name || '';
+    document.getElementById('modal-sub').textContent  = sub  || '';
+
+    // Bonus strip
+    const bonusSection = document.getElementById('modal-bonus');
+    const bonusList    = document.getElementById('bonus-list');
+    bonusList.innerHTML = '';
+    if (bonus && bonus.length > 0) {
+      bonus.forEach(b => {
+        const thumb = document.createElement('div');
+        thumb.className = 'bonus-thumb';
+        thumb.innerHTML = `
+          <div class="bonus-img">
+            <img src="https://img.youtube.com/vi/${b.ytId}/maxresdefault.jpg" alt="${b.title}">
+            <div class="bonus-play">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.5)"/>
+                <polygon points="19,14 38,24 19,34" fill="white"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bonus-info"><div class="bonus-title">${b.title}</div></div>`;
+        thumb.addEventListener('click', () => {
+          document.getElementById('modal-frame').src = buildEmbedUrl(b.ytId);
+          bonusList.querySelectorAll('.bonus-thumb').forEach(t => t.classList.remove('bonus-active'));
+          thumb.classList.add('bonus-active');
+        });
+        bonusList.appendChild(thumb);
+      });
+      bonusSection.classList.add('has-bonus');
+    } else {
+      bonusSection.classList.remove('has-bonus');
+    }
+
+    // Related strip (Option B)
+    const relatedSection = document.getElementById('modal-related');
+    const relatedLinks   = document.getElementById('modal-related-links');
+    relatedLinks.innerHTML = '';
+    if (related && related.length > 0) {
+      related.forEach(r => {
+        const targetCard = document.querySelector(`.map-card[data-id="${r.mapId}"]`);
+        if (!targetCard) return;
+        const btn = document.createElement('button');
+        btn.className = 'modal-related-btn';
+        const arrow = r.direction === 'original'
+          ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        btn.innerHTML = `${arrow} ${r.label}`;
+        btn.addEventListener('click', () => {
+          closeModal();
+          setTimeout(() => {
+            // Switch to the event tab that contains the target card
+            const targetEvent = targetCard.dataset.event;
+            const targetTab = document.querySelector(`.etab[data-event="${targetEvent}"]`);
+            if (targetTab) targetTab.click();
+            // Scroll & flash
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.classList.add('card-flash');
+            setTimeout(() => targetCard.classList.remove('card-flash'), 1400);
+          }, 300);
+        });
+        relatedLinks.appendChild(btn);
+      });
+      relatedSection.classList.add('has-related');
+    } else {
+      relatedSection.classList.remove('has-related');
+    }
+
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.getElementById('modal-frame').src = '';
+    document.getElementById('modal-bonus').classList.remove('has-bonus');
+    document.getElementById('modal-related').classList.remove('has-related');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── jumpToCard: badge click on card → close nothing, just scroll + flash ──
+  function jumpToCard(e, mapId) {
+    e.stopPropagation();
+    const targetCard = document.querySelector(`.map-card[data-id="${mapId}"]`);
+    if (!targetCard) return;
+    const targetEvent = targetCard.dataset.event;
+    const targetTab = document.querySelector(`.etab[data-event="${targetEvent}"]`);
+    if (targetTab) targetTab.click();
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    targetCard.classList.add('card-flash');
+    setTimeout(() => targetCard.classList.remove('card-flash'), 1400);
+  }
+
+  // ── Inline bonus panel toggle ──
+  function toggleBonus(e, btn) {
+    e.stopPropagation(); // don't fire card click → modal
+    const card  = btn.closest('.map-card');
+    const panel = card.querySelector('.map-bonus-panel');
+    const bonus = card.dataset.bonus ? JSON.parse(card.dataset.bonus) : [];
+    const isOpen = panel.classList.contains('open');
+
+    if (!isOpen && panel.innerHTML === '') {
+      // Build panel rows on first open
+      panel.innerHTML = `<div class="map-bonus-panel-label">// RELATED CLIPS</div><div class="map-bonus-rows"></div>`;
+      const rows = panel.querySelector('.map-bonus-rows');
+      bonus.forEach(b => {
+        const row = document.createElement('div');
+        row.className = 'map-bonus-row';
+        row.innerHTML = `
+          <div class="map-bonus-row-icon">
+            <img src="https://img.youtube.com/vi/${b.ytId}/maxresdefault.jpg" alt="${b.title}">
+            <div class="map-bonus-row-play">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="22" stroke="white" stroke-width="1" fill="rgba(0,0,0,0.5)"/>
+                <polygon points="19,14 38,24 19,34" fill="white"/>
+              </svg>
+            </div>
+          </div>
+          <div class="map-bonus-row-title">${b.title}</div>
+          <div class="map-bonus-row-open">▶ OPEN</div>`;
+        row.addEventListener('click', e => {
+          e.stopPropagation();
+          // Open modal on this bonus clip, passing all bonus clips so modal bonus strip also works
+          openModal(b.ytId, b.title, card.dataset.map, bonus.filter(x => x.ytId !== b.ytId));
+        });
+        rows.appendChild(row);
+      });
+    }
+
+    panel.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+  }
+
+  // ── Kacky cards — click on card body opens modal ──
+  const cards = document.querySelectorAll('.map-card');
+  cards.forEach(c => {
+    c.addEventListener('click', e => {
+      if (e.target.closest('.map-bonus-btn') || e.target.closest('.map-bonus-panel') || e.target.closest('.map-remix-badge')) return;
+      const bonus   = c.dataset.bonus   ? JSON.parse(c.dataset.bonus)   : [];
+      const related = c.dataset.related ? JSON.parse(c.dataset.related) : [];
+      openModal(c.dataset.ytId, c.dataset.name, c.dataset.map, bonus, related);
+    });
+  });
+
+  // ── RL cards ──
+  document.querySelectorAll('.rl-card').forEach(c => c.addEventListener('click', () =>
+    openModal(c.dataset.ytId,
+      c.querySelector('.rl-title').textContent,
+      c.querySelector('.rl-meta').textContent, [], [])));
+
+  // ── CoD rows ──
+  document.querySelectorAll('.cod-row').forEach(r => r.addEventListener('click', () =>
+    openModal(r.dataset.ytId,
+      r.querySelector('.cod-title').textContent,
+      r.querySelector('.cod-sub').textContent, [], [])));
+
+  // ── RL tabs ──
+  const rlCards = document.querySelectorAll('.rl-card');
+  document.querySelectorAll('.rl-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.rl-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.dataset.cat;
+      let n = 0;
+      rlCards.forEach(c => {
+        const show = cat === 'all' || c.dataset.cat === cat;
+        c.style.display = show ? '' : 'none';
+        if (show) n++;
+      });
+      document.getElementById('rl-count').textContent = n + ' CLIPS';
+    });
+  });
+
+  // ── Kacky event tabs ──
+  document.querySelectorAll('.etab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.etab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const ev = tab.dataset.event;
+      let n = 0;
+      cards.forEach(c => {
+        const show = ev === 'all' || c.dataset.event === ev;
+        c.classList.toggle('hidden', !show);
+        if (show) n++;
+      });
+      document.getElementById('kacky-count').textContent = n + ' CLIPS';
+    });
+  });
+
+  // ── Counts ──
+  document.getElementById('kacky-count').textContent = cards.length + ' CLIPS';
+  document.getElementById('rl-count').textContent    = document.querySelectorAll('.rl-card').length + ' CLIPS';
+  document.getElementById('cod-count').textContent   = document.querySelectorAll('.cod-row').length + ' CLIPS';
+</script>
+</body>
+</html>
