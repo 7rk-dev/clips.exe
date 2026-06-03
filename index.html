@@ -206,32 +206,43 @@
 
   .scroll-cue {
     position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
-    display:flex;flex-direction:column;align-items:center;gap:10px;
-    font-family:var(--font-mono);font-size:9px;letter-spacing:3px;color:var(--text-dim);
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+    font-family:var(--font-mono);font-size:13px;letter-spacing:4px;color:var(--text-dim);
     animation:scfloat 2.2s ease-in-out infinite;
   }
-  .scroll-cue::after { content:'';width:1px;height:36px;background:linear-gradient(var(--text-dim),transparent); }
+  .scroll-cue::after { content:'';width:2px;height:56px;background:linear-gradient(var(--text-muted),transparent); }
 
   /* Animated divider */
   @keyframes divider-flow {
-    0%   { background-position: 200% center; }
-    100% { background-position: -200% center; }
+    0%   { background-position: 150% center; }
+    100% { background-position: -150% center; }
   }
   .divider-animated {
-    height: 2px;
+    height: 1px;
     position: relative; z-index: 1;
-    margin: 0 2rem;
-    background-size: 200% auto;
+    margin: 0 4rem;
+    background-size: 300% auto;
     animation: divider-flow 12s linear infinite;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
   }
   .divider-kacky {
-    background-image: linear-gradient(90deg, transparent, var(--kacky), var(--kacky-bg), var(--kacky), transparent);
+    background-image: linear-gradient(90deg,
+      transparent 0%, transparent 15%,
+      var(--kacky) 40%, var(--kacky) 60%,
+      transparent 85%, transparent 100%);
   }
   .divider-rl {
-    background-image: linear-gradient(90deg, transparent, var(--rl), rgba(0,237,59,0.3), var(--rl), transparent);
+    background-image: linear-gradient(90deg,
+      transparent 0%, transparent 15%,
+      var(--rl) 40%, var(--rl) 60%,
+      transparent 85%, transparent 100%);
   }
   .divider-cod {
-    background-image: linear-gradient(90deg, transparent, var(--cod), rgba(200,216,255,0.3), var(--cod), transparent);
+    background-image: linear-gradient(90deg,
+      transparent 0%, transparent 15%,
+      var(--cod) 40%, var(--cod) 60%,
+      transparent 85%, transparent 100%);
   }
   @keyframes scfloat {
     0%,100%{transform:translateX(-50%) translateY(0)}
@@ -281,7 +292,7 @@
   .s-cod   .sec-label { color:var(--cod); }
 
   .sec-title { font-family:var(--font-pixel);font-size:clamp(11px,2vw,18px);color:#fff;line-height:1.5; }
-  .sec-count { font-family:var(--font-mono);font-size:11px;color:var(--text-dim);flex-shrink:0;text-align:right; }
+  .sec-count { font-family:var(--font-mono);font-size:14px;color:var(--text-muted);flex-shrink:0;text-align:right; }
 
   /* Section top border — coloured */
 
@@ -346,7 +357,7 @@
   .map-tags { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px; }
   .map-tag  { font-family:var(--font-mono);font-size:11px;padding:3px 10px;border:1px solid var(--border-hi);color:var(--text-muted); }
   .map-bonus-hint { font-family:var(--font-mono);font-size:11px;color:var(--kacky);opacity:0.9;margin-top:12px;letter-spacing:1px; }
-  .map-bar  { position:absolute;bottom:0;left:0;height:2px;width:0;background:var(--kacky-bg);box-shadow:0 0 10px var(--kacky-glow);transition:width 0.3s; }
+  .map-bar  { position:absolute;bottom:0;left:0;height:2px;width:0;background:var(--kacky);box-shadow:0 0 12px var(--kacky-glow);transition:width 0.3s; }
   .map-card:hover .map-bar { width:100%; }
 
   /* Bonus button on card */
@@ -597,6 +608,63 @@
     .event-tabs{width:100%;}
     .etab{flex:1;text-align:center;padding:10px 8px;}
   }
+
+  /* Search bar */
+  .kacky-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-hi);
+    width: fit-content;
+    min-width: 320px;
+    background: var(--bg2);
+  }
+  .kacky-search-icon {
+    padding: 0 14px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .kacky-search {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--text);
+    padding: 12px 16px 12px 0;
+    width: 260px;
+  }
+  .kacky-search::placeholder { color: var(--text-dim); }
+  .kacky-search:focus ~ .kacky-search-wrap,
+  .kacky-search-wrap:focus-within {
+    border-color: var(--kacky);
+    box-shadow: 0 0 12px var(--kacky-glow);
+  }
+  .kacky-search-clear {
+    background: none; border: none;
+    color: var(--text-dim); cursor: pointer;
+    padding: 0 14px; font-size: 14px;
+    display: none; align-items: center;
+    transition: color 0.15s;
+  }
+  .kacky-search-clear:hover { color: var(--kacky); }
+  .kacky-search-clear.visible { display: flex; }
+  .kacky-no-results {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    padding: 2rem 0;
+    text-align: center;
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+  .kacky-no-results.visible { display: block; }
 </style>
 </head>
 <body>
@@ -655,6 +723,18 @@
     <button class="etab" data-event="km4">KACKY REMIXED 4</button>
   </div>
 
+
+  <div class="kacky-search-wrap" id="kacky-search-wrap">
+    <div class="kacky-search-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 10L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <input class="kacky-search" id="kacky-search" type="text" placeholder="SEARCH BY MAP NUMBER OR NAME..." autocomplete="off" spellcheck="false">
+    <button class="kacky-search-clear" id="kacky-search-clear" onclick="clearKackySearch()">✕</button>
+  </div>
+
   <div class="kacky-grid">
     <!-- ADD A CLIP: copy a map-card block, set data-event / data-yt-id / data-map / data-name -->
 
@@ -672,7 +752,7 @@
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
-    <div class="map-card" data-event="kr6" data-id="kr6-377" data-yt-id="xcx12LB-NSg" data-map="KR #377" data-name="Kacky Reloaded #377">
+    <div class="map-card" data-event="kr6" data-id="kr6-377" data-bonus='[{"ytId": "V3F1uv6wdk8", "title": "Fails"}]' data-yt-id="xcx12LB-NSg" data-map="KR #377" data-name="Kacky Reloaded #377">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/xcx12LB-NSg/maxresdefault.jpg" alt="KR #377" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -683,6 +763,10 @@
         <div class="map-num">KR #377</div>
         <div class="map-name">Kacky Reloaded #377</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -696,11 +780,11 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #378</div>
         <div class="map-name">Kacky Reloaded #378</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">TOP 9</span></div>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
-    <div class="map-card" data-event="kr6" data-id="kr6-379" data-yt-id="adHI3kDt110" data-map="KR #379" data-name="Kacky Reloaded #379">
+    <div class="map-card" data-event="kr6" data-id="kr6-379" data-bonus='[{"ytId": "1fSXb8nngak", "title": "Fails"}]' data-yt-id="adHI3kDt110" data-map="KR #379" data-name="Kacky Reloaded #379">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/adHI3kDt110/maxresdefault.jpg" alt="KR #379" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -711,6 +795,10 @@
         <div class="map-num">KR #379</div>
         <div class="map-name">Kacky Reloaded #379</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -766,7 +854,7 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #394</div>
         <div class="map-name">Kacky Reloaded #394</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">TOP 7</span></div>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -822,7 +910,7 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #406</div>
         <div class="map-name">Kacky Reloaded #406</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LAST TRY</span></div>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -850,7 +938,7 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #420</div>
         <div class="map-name">Kacky Reloaded #420</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CRAZY FIN</span></div>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -882,7 +970,7 @@
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
-    <div class="map-card" data-event="kr6" data-id="kr6-429" data-yt-id="Xgy40Ro1bqA" data-map="KR #429" data-name="Kacky Reloaded #429">
+    <div class="map-card" data-event="kr6" data-id="kr6-429" data-bonus='[{"ytId": "1fSXb8nngak", "title": "Fails"}]' data-yt-id="Xgy40Ro1bqA" data-map="KR #429" data-name="Kacky Reloaded #429">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/Xgy40Ro1bqA/maxresdefault.jpg" alt="KR #429" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -892,7 +980,11 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #429</div>
         <div class="map-name">Kacky Reloaded #429</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LAST DAY</span></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -938,7 +1030,7 @@
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
-    <div class="map-card" data-event="kr6" data-id="kr6-440" data-yt-id="G6BzOi3qaTA" data-map="KR #440" data-name="Kacky Reloaded #440">
+    <div class="map-card" data-event="kr6" data-id="kr6-440" data-bonus='[{"ytId": "u2bjircVhCM", "title": "Fails"}]' data-yt-id="G6BzOi3qaTA" data-map="KR #440" data-name="Kacky Reloaded #440">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/G6BzOi3qaTA/maxresdefault.jpg" alt="KR #440" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -949,6 +1041,10 @@
         <div class="map-num">KR #440</div>
         <div class="map-name">Kacky Reloaded #440</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -976,7 +1072,7 @@
         <span class="map-evt">KACKY RELOADED 6</span>
         <div class="map-num">KR #442</div>
         <div class="map-name">Kacky Reloaded #442</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LAST DAY</span></div>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
@@ -1008,7 +1104,7 @@
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
-    <div class="map-card" data-event="kr6" data-id="kr6-447" data-yt-id="4DOAEJmFeHM" data-map="KR #447" data-name="Kacky Reloaded #447">
+    <div class="map-card" data-event="kr6" data-id="kr6-447" data-bonus='[{"ytId": "uW4DVsX3ct0", "title": "Fails"}]' data-yt-id="4DOAEJmFeHM" data-map="KR #447" data-name="Kacky Reloaded #447">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/4DOAEJmFeHM/maxresdefault.jpg" alt="KR #447" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1019,13 +1115,17 @@
         <div class="map-num">KR #447</div>
         <div class="map-name">Kacky Reloaded #447</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
     </div>
 
     <!-- ── KACKIEST KACKY 10 (demo — replace with your real clips) ── -->
 
     <!-- ── KACKY BOLETED 2 (demo — replace with your real clips) ── -->
-    <div class="map-card" data-event="kr6" data-id="kr6-450" data-yt-id="YtXFSM0SBUg" data-map="KR #450" data-name="Kacky Reloaded #450">
+    <div class="map-card" data-event="kr6" data-id="kr6-450" data-bonus='[{"ytId": "TXAdRnC4T-s", "title": "Crazy starts"}, {"ytId": "6tpoRh--bHo", "title": "Fails"}, {"ytId": "uZEWmGkzpPU", "title": "Insane recovery"}]' data-yt-id="YtXFSM0SBUg" data-map="KR #450" data-name="Kacky Reloaded #450">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/YtXFSM0SBUg/maxresdefault.jpg" alt="KR #450" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1036,6 +1136,10 @@
         <div class="map-num">KR #450</div>
         <div class="map-name">Kacky Reloaded #450</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 3 BONUS CLIPS
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1056,7 +1160,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-331" data-yt-id="XEVg_XgLDXg" data-map="KK #331" data-name="Kackiest Kacky #331">
+    <div class="map-card" data-event="kk10" data-id="kk10-331" data-related='[{"mapId": "km4-231", "label": "REMIX \u2014 KM #231", "direction": "remix"}]' data-yt-id="XEVg_XgLDXg" data-map="KK #331" data-name="Kackiest Kacky #331">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/XEVg_XgLDXg/maxresdefault.jpg" alt="KK #331" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1067,6 +1171,8 @@
         <div class="map-num">KK #331</div>
         <div class="map-name">Kackiest Kacky #331</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'km4-231')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> REMIX — KM #231</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1086,7 +1192,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-341" data-yt-id="7AoDwZVYzRk" data-map="KK #341" data-name="Kackiest Kacky #341">
+    <div class="map-card" data-event="kk10" data-id="kk10-341" data-bonus='[{"ytId": "E0GKE5g1o6o", "title": "Fails"}]' data-yt-id="7AoDwZVYzRk" data-map="KK #341" data-name="Kackiest Kacky #341">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/7AoDwZVYzRk/maxresdefault.jpg" alt="KK #341" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1097,6 +1203,10 @@
         <div class="map-num">KK #341</div>
         <div class="map-name">Kackiest Kacky #341</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1116,7 +1226,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-349" data-yt-id="WPTVMRe6RaU" data-map="KK #349" data-name="Kackiest Kacky #349">
+    <div class="map-card" data-event="kk10" data-id="kk10-349" data-bonus='[{"ytId": "su1eDRUJtq4", "title": "Fails"}]' data-related='[{"mapId": "km4-249", "label": "REMIX \u2014 KM #249", "direction": "remix"}]' data-yt-id="WPTVMRe6RaU" data-map="KK #349" data-name="Kackiest Kacky #349">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/WPTVMRe6RaU/maxresdefault.jpg" alt="KK #349" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1127,11 +1237,17 @@
         <div class="map-num">KK #349</div>
         <div class="map-name">Kackiest Kacky #349</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'km4-249')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> REMIX — KM #249</span>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-350" data-yt-id="6gX4keGQbaY" data-map="KK #350" data-name="Kackiest Kacky #350">
+    <div class="map-card" data-event="kk10" data-id="kk10-350" data-bonus='[{"ytId": "iiQtZyU_CTs", "title": "NT fail"}]' data-yt-id="6gX4keGQbaY" data-map="KK #350" data-name="Kackiest Kacky #350">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/6gX4keGQbaY/maxresdefault.jpg" alt="KK #350" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1142,6 +1258,10 @@
         <div class="map-num">KK #350</div>
         <div class="map-name">Kackiest Kacky #350</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1161,7 +1281,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-372" data-yt-id="ScgGjc-YqUg" data-map="KK #372" data-name="Kackiest Kacky #372">
+    <div class="map-card" data-event="kk10" data-id="kk10-372" data-related='[{"mapId": "km4-272", "label": "REMIX \u2014 KM #272", "direction": "remix"}]' data-yt-id="ScgGjc-YqUg" data-map="KK #372" data-name="Kackiest Kacky #372">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/ScgGjc-YqUg/maxresdefault.jpg" alt="KK #372" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1172,11 +1292,13 @@
         <div class="map-num">KK #372</div>
         <div class="map-name">Kackiest Kacky #372</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'km4-272')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> REMIX — KM #272</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-378" data-yt-id="QwfqtFKWNy4" data-map="KK #378" data-name="Kackiest Kacky #378">
+    <div class="map-card" data-event="kk10" data-id="kk10-378" data-bonus='[{"ytId": "MLcfhT7g5gQ", "title": "How it's fin?"}, {"ytId": "qI97CzucYZY", "title": "NT fail"}]' data-yt-id="QwfqtFKWNy4" data-map="KK #378" data-name="Kackiest Kacky #378">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/QwfqtFKWNy4/maxresdefault.jpg" alt="KK #378" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1187,11 +1309,15 @@
         <div class="map-num">KK #378</div>
         <div class="map-name">Kackiest Kacky #378</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 2 BONUS CLIPS
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-379" data-yt-id="z5tSvqM2Jes" data-map="KK #379" data-name="Kackiest Kacky #379">
+    <div class="map-card" data-event="kk10" data-id="kk10-379" data-bonus='[{"ytId": "egyhdyTcw0s", "title": "Fails"}]' data-yt-id="z5tSvqM2Jes" data-map="KK #379" data-name="Kackiest Kacky #379">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/z5tSvqM2Jes/maxresdefault.jpg" alt="KK #379" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1202,11 +1328,15 @@
         <div class="map-num">KK #379</div>
         <div class="map-name">Kackiest Kacky #379</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-380" data-yt-id="FTy4vJCGx8M" data-map="KK #380" data-name="Kackiest Kacky #380">
+    <div class="map-card" data-event="kk10" data-id="kk10-380" data-bonus='[{"ytId": "57bwHdM7D9g", "title": "Mad"}]' data-related='[{"mapId": "km4-280", "label": "REMIX \u2014 KM #280", "direction": "remix"}]' data-yt-id="FTy4vJCGx8M" data-map="KK #380" data-name="Kackiest Kacky #380">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/FTy4vJCGx8M/maxresdefault.jpg" alt="KK #380" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1217,6 +1347,12 @@
         <div class="map-num">KK #380</div>
         <div class="map-name">Kackiest Kacky #380</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'km4-280')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> REMIX — KM #280</span>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1251,7 +1387,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-392" data-yt-id="N3390M_zVbw" data-map="KK #392" data-name="Kackiest Kacky #392">
+    <div class="map-card" data-event="kk10" data-id="kk10-392" data-bonus='[{"ytId": "tFf1qwURYeA", "title": "Fails"}]' data-yt-id="N3390M_zVbw" data-map="KK #392" data-name="Kackiest Kacky #392">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/N3390M_zVbw/maxresdefault.jpg" alt="KK #392" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1262,11 +1398,15 @@
         <div class="map-num">KK #392</div>
         <div class="map-name">Kackiest Kacky #392</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-401" data-yt-id="K8fgh_Fa4yQ" data-map="KK #401" data-name="Kackiest Kacky #401">
+    <div class="map-card" data-event="kk10" data-id="kk10-401" data-bonus='[{"ytId": "jq_XKCStOIA", "title": "Fail WR attempt"}, {"ytId": "AqPlMNFP4oo", "title": "Fails"}]' data-yt-id="K8fgh_Fa4yQ" data-map="KK #401" data-name="Kackiest Kacky #401">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/K8fgh_Fa4yQ/maxresdefault.jpg" alt="KK #401" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1277,6 +1417,10 @@
         <div class="map-num">KK #401</div>
         <div class="map-name">Kackiest Kacky #401</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 2 BONUS CLIPS
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1356,7 +1500,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-412" data-yt-id="o8_Z_HORR6Q" data-map="KK #412" data-name="Kackiest Kacky #412">
+    <div class="map-card" data-event="kk10" data-id="kk10-412" data-bonus='[{"ytId": "yBHWAa7Zz-o", "title": "Mad"}]' data-yt-id="o8_Z_HORR6Q" data-map="KK #412" data-name="Kackiest Kacky #412">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/o8_Z_HORR6Q/maxresdefault.jpg" alt="KK #412" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1366,7 +1510,11 @@
         <span class="map-evt">KACKIEST KACKY 10</span>
         <div class="map-num">KK #412</div>
         <div class="map-name">Kackiest Kacky #412</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">FIRST MAP AND TRY OF THE DAY</span></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1381,12 +1529,12 @@
         <span class="map-evt">KACKIEST KACKY 10</span>
         <div class="map-num">KK #413</div>
         <div class="map-name">Kackiest Kacky #413</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LEARN AND APPLY DIRECTLY</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="kk10" data-id="kk10-414" data-yt-id="vJf8krwmHbY" data-map="KK #414" data-name="Kackiest Kacky #414">
+    <div class="map-card" data-event="kk10" data-id="kk10-414" data-bonus='[{"ytId": "UlKXGPsv7xE", "title": "NT fail"}]' data-related='[{"mapId": "km4-214", "label": "REMIX \u2014 KM #214", "direction": "remix"}]' data-yt-id="vJf8krwmHbY" data-map="KK #414" data-name="Kackiest Kacky #414">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/vJf8krwmHbY/maxresdefault.jpg" alt="KK #414" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1397,6 +1545,12 @@
         <div class="map-num">KK #414</div>
         <div class="map-name">Kackiest Kacky #414</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'km4-214')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> REMIX — KM #214</span>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1412,40 +1566,6 @@
         <div class="map-num">KK #417</div>
         <div class="map-name">Kackiest Kacky #417</div>
         <div class="map-tags"></div>
-      </div>
-      <div class="map-bonus-panel"></div>
-      <div class="map-bar"></div>
-    </div>
-
-    <div class="map-card" data-event="kb2" data-yt-id="dQw4w9WgXcQ" data-map="KB #002" data-name="Kacky Boleted #2">
-      <div class="map-thumb">
-        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="KB #002" loading="lazy">
-        <div class="map-thumb-overlay"></div>
-        <div class="map-thumb-num">KB #002</div>
-      </div>
-      <div class="map-inner">
-        <span class="map-evt">KACKY BOLETED 2</span>
-        <div class="map-num">KB #002</div>
-        <div class="map-name">Kacky Boleted #2</div>
-        <div class="map-tags"><span class="map-tag">FIRST FINISH</span></div>
-      </div><div class="map-bonus-panel"></div><div class="map-bar"></div>
-    </div>
-
-    <div class="map-card" data-event="kb2" data-yt-id="dQw4w9WgXcQ" data-map="KB #009" data-name="Kacky Boleted #9"
-      data-bonus='[{"ytId":"dQw4w9WgXcQ","title":"Campaign PB"}]'>
-      <div class="map-thumb">
-        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="KB #009" loading="lazy">
-        <div class="map-thumb-overlay"></div>
-        <div class="map-thumb-num">KB #009</div>
-      </div>
-      <div class="map-inner">
-        <span class="map-evt">KACKY BOLETED 2</span>
-        <div class="map-num">KB #009</div>
-        <div class="map-name">Kacky Boleted #9</div>
-        <div class="map-tags"><span class="map-tag">TOP RUN</span><span class="map-tag">PB</span></div>
-        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
-          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
-        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1520,7 +1640,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #209</div>
         <div class="map-name">Kacky Remixed #209</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LAST TRY</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1540,7 +1660,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-212" data-yt-id="JKdb-qfr_Ok" data-map="KM #212" data-name="Kacky Remixed #212">
+    <div class="map-card" data-event="km4" data-id="km4-212" data-bonus='[{"ytId": "Sk_U2CMo6GI", "title": "Fails"}]' data-yt-id="JKdb-qfr_Ok" data-map="KM #212" data-name="Kacky Remixed #212">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/JKdb-qfr_Ok/maxresdefault.jpg" alt="KM #212" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1551,11 +1671,15 @@
         <div class="map-num">KM #212</div>
         <div class="map-name">Kacky Remixed #212</div>
         <div class="map-tags"></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-214" data-yt-id="pLLbWEavSIo" data-map="KM #214" data-name="Kacky Remixed #214">
+    <div class="map-card" data-event="km4" data-id="km4-214" data-related='[{"mapId": "kk10-414", "label": "ORIGINAL \u2014 KK #414", "direction": "original"}]' data-yt-id="pLLbWEavSIo" data-map="KM #214" data-name="Kacky Remixed #214">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/pLLbWEavSIo/maxresdefault.jpg" alt="KM #214" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1566,6 +1690,8 @@
         <div class="map-num">KM #214</div>
         <div class="map-name">Kacky Remixed #214</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'kk10-414')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ORIGINAL — KK #414</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1630,7 +1756,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-222" data-yt-id="JpVZqxsatD4" data-map="KM #222" data-name="Kacky Remixed #222">
+    <div class="map-card" data-event="km4" data-id="km4-222" data-bonus='[{"ytId": "I2jLrMu4Ks0", "title": "Scammed"}]' data-yt-id="JpVZqxsatD4" data-map="KM #222" data-name="Kacky Remixed #222">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/JpVZqxsatD4/maxresdefault.jpg" alt="KM #222" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1640,7 +1766,11 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #222</div>
         <div class="map-name">Kacky Remixed #222</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">FIRST TRY</span></div>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1685,7 +1815,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #227</div>
         <div class="map-name">Kacky Remixed #227</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CHEESE</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1700,12 +1830,12 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #228</div>
         <div class="map-name">Kacky Remixed #228</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">FIRST ROTA</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-231" data-yt-id="LQi3Rnr2BmE" data-map="KM #231" data-name="Kacky Remixed #231">
+    <div class="map-card" data-event="km4" data-id="km4-231" data-related='[{"mapId": "kk10-331", "label": "ORIGINAL \u2014 KK #331", "direction": "original"}]' data-yt-id="LQi3Rnr2BmE" data-map="KM #231" data-name="Kacky Remixed #231">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/LQi3Rnr2BmE/maxresdefault.jpg" alt="KM #231" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1716,6 +1846,8 @@
         <div class="map-num">KM #231</div>
         <div class="map-name">Kacky Remixed #231</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'kk10-331')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ORIGINAL — KK #331</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1730,7 +1862,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #232</div>
         <div class="map-name">Kacky Remixed #232</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">TOP 3</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1805,7 +1937,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #238</div>
         <div class="map-name">Kacky Remixed #238</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">LAST TRY</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1885,7 +2017,7 @@
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-249" data-yt-id="xSaQVMtDC-I" data-map="KM #249" data-name="Kacky Remixed #249">
+    <div class="map-card" data-event="km4" data-id="km4-249" data-related='[{"mapId": "kk10-349", "label": "ORIGINAL \u2014 KK #349", "direction": "original"}]' data-yt-id="xSaQVMtDC-I" data-map="KM #249" data-name="Kacky Remixed #249">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/xSaQVMtDC-I/maxresdefault.jpg" alt="KM #249" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -1896,6 +2028,8 @@
         <div class="map-num">KM #249</div>
         <div class="map-name">Kacky Remixed #249</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'kk10-349')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ORIGINAL — KK #349</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -1910,7 +2044,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #250</div>
         <div class="map-name">Kacky Remixed #250</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CHEESE</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -2090,12 +2224,12 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #271</div>
         <div class="map-name">Kacky Remixed #271</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">TOP 8</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-272" data-yt-id="6oEcVJZMMBk" data-map="KM #272" data-name="Kacky Remixed #272">
+    <div class="map-card" data-event="km4" data-id="km4-272" data-bonus='[{"ytId": "AOJ3ScgmJrQ", "title": "Fail WR attempt"}]' data-related='[{"mapId": "kk10-372", "label": "ORIGINAL \u2014 KK #372", "direction": "original"}]' data-yt-id="6oEcVJZMMBk" data-map="KM #272" data-name="Kacky Remixed #272">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/6oEcVJZMMBk/maxresdefault.jpg" alt="KM #272" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -2105,7 +2239,13 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #272</div>
         <div class="map-name">Kacky Remixed #272</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">TOP 2</span></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'kk10-372')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ORIGINAL — KK #372</span>
+      
+        <button class="map-bonus-btn" onclick="toggleBonus(event,this)">
+          <span class="chevron"><svg width="10" height="7" viewBox="0 0 10 7" fill="none"><path d="M1 1L5 5.5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> 1 BONUS CLIP
+        </button>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -2135,7 +2275,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #276</div>
         <div class="map-name">Kacky Remixed #276</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CHEESE</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -2150,12 +2290,12 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #279</div>
         <div class="map-name">Kacky Remixed #279</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CRAZY FIN</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
     </div>
-    <div class="map-card" data-event="km4" data-id="km4-280" data-yt-id="bCNx5wdl9jg" data-map="KM #280" data-name="Kacky Remixed #280">
+    <div class="map-card" data-event="km4" data-id="km4-280" data-related='[{"mapId": "kk10-380", "label": "ORIGINAL \u2014 KK #380", "direction": "original"}]' data-yt-id="bCNx5wdl9jg" data-map="KM #280" data-name="Kacky Remixed #280">
       <div class="map-thumb">
         <img src="https://img.youtube.com/vi/bCNx5wdl9jg/maxresdefault.jpg" alt="KM #280" loading="lazy">
         <div class="map-thumb-overlay"></div>
@@ -2166,6 +2306,8 @@
         <div class="map-num">KM #280</div>
         <div class="map-name">Kacky Remixed #280</div>
         <div class="map-tags"></div>
+      
+        <span class="map-remix-badge" onclick="jumpToCard(event,'kk10-380')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ORIGINAL — KK #380</span>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -2210,7 +2352,7 @@
         <span class="map-evt">KACKY REMIXED 4</span>
         <div class="map-num">KM #287</div>
         <div class="map-name">Kacky Remixed #287</div>
-        <div class="map-tags"></div>
+        <div class="map-tags"><span class="map-tag">CHEESE</span></div>
       </div>
       <div class="map-bonus-panel"></div>
       <div class="map-bar"></div>
@@ -2400,6 +2542,382 @@
 
 
 <!-- ══════════ ROCKET LEAGUE ══════════ -->
+
+    <div class="map-card" data-event="kb2" data-id="kb2-28" data-yt-id="rSX26-Zmbek" data-map="KB #28" data-name="Kacky Boleted #28">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/rSX26-Zmbek/maxresdefault.jpg" alt="KB #28" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #28</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #28</div>
+        <div class="map-name">Kacky Boleted #28</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-30" data-yt-id="IDoEouvyHIk" data-map="KB #30" data-name="Kacky Boleted #30">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/IDoEouvyHIk/maxresdefault.jpg" alt="KB #30" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #30</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #30</div>
+        <div class="map-name">Kacky Boleted #30</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-32" data-yt-id="kcN7XK-KsQ8" data-map="KB #32" data-name="Kacky Boleted #32">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/kcN7XK-KsQ8/maxresdefault.jpg" alt="KB #32" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #32</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #32</div>
+        <div class="map-name">Kacky Boleted #32</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-33" data-yt-id="IQbIPuHpXAA" data-map="KB #33" data-name="Kacky Boleted #33">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/IQbIPuHpXAA/maxresdefault.jpg" alt="KB #33" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #33</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #33</div>
+        <div class="map-name">Kacky Boleted #33</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-34" data-yt-id="R2RbuAkxIoY" data-map="KB #34" data-name="Kacky Boleted #34">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/R2RbuAkxIoY/maxresdefault.jpg" alt="KB #34" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #34</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #34</div>
+        <div class="map-name">Kacky Boleted #34</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-36" data-yt-id="0K3x7HZcLxA" data-map="KB #36" data-name="Kacky Boleted #36">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/0K3x7HZcLxA/maxresdefault.jpg" alt="KB #36" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #36</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #36</div>
+        <div class="map-name">Kacky Boleted #36</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-37" data-yt-id="c5_xzKEvWWA" data-map="KB #37" data-name="Kacky Boleted #37">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/c5_xzKEvWWA/maxresdefault.jpg" alt="KB #37" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #37</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #37</div>
+        <div class="map-name">Kacky Boleted #37</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-39" data-yt-id="ldC1RByLU34" data-map="KB #39" data-name="Kacky Boleted #39">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/ldC1RByLU34/maxresdefault.jpg" alt="KB #39" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #39</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #39</div>
+        <div class="map-name">Kacky Boleted #39</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-40" data-yt-id="-EHUq4DyYRo" data-map="KB #40" data-name="Kacky Boleted #40">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/-EHUq4DyYRo/maxresdefault.jpg" alt="KB #40" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #40</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #40</div>
+        <div class="map-name">Kacky Boleted #40</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-42" data-yt-id="dFtW0F8o3Rw" data-map="KB #42" data-name="Kacky Boleted #42">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/dFtW0F8o3Rw/maxresdefault.jpg" alt="KB #42" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #42</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #42</div>
+        <div class="map-name">Kacky Boleted #42</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-45" data-yt-id="_YsfFoeDcn8" data-map="KB #45" data-name="Kacky Boleted #45">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/_YsfFoeDcn8/maxresdefault.jpg" alt="KB #45" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #45</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #45</div>
+        <div class="map-name">Kacky Boleted #45</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-46" data-yt-id="5OKXfuj7qrw" data-map="KB #46" data-name="Kacky Boleted #46">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/5OKXfuj7qrw/maxresdefault.jpg" alt="KB #46" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #46</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #46</div>
+        <div class="map-name">Kacky Boleted #46</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-47" data-yt-id="4TDGnHBGpQI" data-map="KB #47" data-name="Kacky Boleted #47">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/4TDGnHBGpQI/maxresdefault.jpg" alt="KB #47" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #47</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #47</div>
+        <div class="map-name">Kacky Boleted #47</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-49" data-yt-id="qH9ddM9FytM" data-map="KB #49" data-name="Kacky Boleted #49">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/qH9ddM9FytM/maxresdefault.jpg" alt="KB #49" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #49</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #49</div>
+        <div class="map-name">Kacky Boleted #49</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-50" data-yt-id="lEigtlu-4i4" data-map="KB #50" data-name="Kacky Boleted #50">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/lEigtlu-4i4/maxresdefault.jpg" alt="KB #50" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #50</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #50</div>
+        <div class="map-name">Kacky Boleted #50</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-51" data-yt-id="pXUabZRJulQ" data-map="KB #51" data-name="Kacky Boleted #51">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/pXUabZRJulQ/maxresdefault.jpg" alt="KB #51" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #51</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #51</div>
+        <div class="map-name">Kacky Boleted #51</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-52" data-yt-id="AXH29ne3b4Q" data-map="KB #52" data-name="Kacky Boleted #52">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/AXH29ne3b4Q/maxresdefault.jpg" alt="KB #52" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #52</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #52</div>
+        <div class="map-name">Kacky Boleted #52</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-53" data-yt-id="yE_TodjjILs" data-map="KB #53" data-name="Kacky Boleted #53">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/yE_TodjjILs/maxresdefault.jpg" alt="KB #53" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #53</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #53</div>
+        <div class="map-name">Kacky Boleted #53</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-54" data-yt-id="UWUkXdpmx7s" data-map="KB #54" data-name="Kacky Boleted #54">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/UWUkXdpmx7s/maxresdefault.jpg" alt="KB #54" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #54</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #54</div>
+        <div class="map-name">Kacky Boleted #54</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-55" data-yt-id="u5KmVbe-v_A" data-map="KB #55" data-name="Kacky Boleted #55">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/u5KmVbe-v_A/maxresdefault.jpg" alt="KB #55" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #55</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #55</div>
+        <div class="map-name">Kacky Boleted #55</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-56" data-yt-id="l8xjuTBBFqM" data-map="KB #56" data-name="Kacky Boleted #56">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/l8xjuTBBFqM/maxresdefault.jpg" alt="KB #56" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #56</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #56</div>
+        <div class="map-name">Kacky Boleted #56</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-57" data-yt-id="Z7AKqVTFcn8" data-map="KB #57" data-name="Kacky Boleted #57">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/Z7AKqVTFcn8/maxresdefault.jpg" alt="KB #57" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #57</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #57</div>
+        <div class="map-name">Kacky Boleted #57</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-58" data-yt-id="U6GClLeejzY" data-map="KB #58" data-name="Kacky Boleted #58">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/U6GClLeejzY/maxresdefault.jpg" alt="KB #58" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #58</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #58</div>
+        <div class="map-name">Kacky Boleted #58</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-59" data-yt-id="onsIF5kb7QI" data-map="KB #59" data-name="Kacky Boleted #59">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/onsIF5kb7QI/maxresdefault.jpg" alt="KB #59" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #59</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #59</div>
+        <div class="map-name">Kacky Boleted #59</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
+    <div class="map-card" data-event="kb2" data-id="kb2-60" data-yt-id="beKjmr4WDn8" data-map="KB #60" data-name="Kacky Boleted #60">
+      <div class="map-thumb">
+        <img src="https://img.youtube.com/vi/beKjmr4WDn8/maxresdefault.jpg" alt="KB #60" loading="lazy">
+        <div class="map-thumb-overlay"></div>
+        <div class="map-thumb-num">KB #60</div>
+      </div>
+      <div class="map-inner">
+        <span class="map-evt">KACKY BOLETED 2</span>
+        <div class="map-num">KB #60</div>
+        <div class="map-name">Kacky Boleted #60</div>
+        <div class="map-tags"></div>
+      </div>
+      <div class="map-bonus-panel"></div>
+      <div class="map-bar"></div>
+    </div>
 
 <div class="divider-animated divider-rl"></div>
 <section id="rl" class="s-rl">
@@ -2737,6 +3255,61 @@
   document.getElementById('kacky-count').textContent = cards.length + ' CLIPS';
   document.getElementById('rl-count').textContent    = document.querySelectorAll('.rl-card').length + ' CLIPS';
   document.getElementById('cod-count').textContent   = document.querySelectorAll('.cod-row').length + ' CLIPS';
+
+  // ── Kacky search ──
+  const kackySearch = document.getElementById('kacky-search');
+  const kackySearchClear = document.getElementById('kacky-search-clear');
+
+  kackySearch.addEventListener('input', filterKacky);
+
+  function clearKackySearch() {
+    kackySearch.value = '';
+    kackySearchClear.classList.remove('visible');
+    filterKacky();
+    kackySearch.focus();
+  }
+
+  function filterKacky() {
+    const query = kackySearch.value.trim().toLowerCase();
+    kackySearchClear.classList.toggle('visible', query.length > 0);
+
+    const activeTab = document.querySelector('.etab.active');
+    const activeEvent = activeTab ? activeTab.dataset.event : 'all';
+
+    let visible = 0;
+    cards.forEach(c => {
+      const matchEvent = activeEvent === 'all' || c.dataset.event === activeEvent;
+      const matchSearch = !query
+        || c.dataset.map.toLowerCase().includes(query)
+        || c.dataset.name.toLowerCase().includes(query)
+        || (c.dataset.event || '').toLowerCase().includes(query);
+      const show = matchEvent && matchSearch;
+      c.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    document.getElementById('kacky-count').textContent = visible + ' CLIPS';
+
+    // No results message
+    let noRes = document.getElementById('kacky-no-results');
+    if (!noRes) {
+      noRes = document.createElement('div');
+      noRes.id = 'kacky-no-results';
+      noRes.className = 'kacky-no-results';
+      noRes.textContent = 'NO MAPS FOUND';
+      document.querySelector('.kacky-grid').appendChild(noRes);
+    }
+    noRes.classList.toggle('visible', visible === 0);
+  }
+
+  // Patch etab click to also re-apply search filter
+  document.querySelectorAll('.etab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // small delay so active class is set first
+      setTimeout(filterKacky, 0);
+    });
+  });
+
 </script>
 </body>
 </html>
