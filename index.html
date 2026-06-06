@@ -690,7 +690,8 @@
     letter-spacing: 1px; color: #ff6060;
     background: rgba(0,0,0,0.65);
     border: 1px solid rgba(255,80,80,0.4);
-    padding: 3px 8px;
+    padding: 5px 8px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
   }
 
   /* Map stats (PB + Rank) */
@@ -777,7 +778,7 @@
     background:linear-gradient(to bottom, transparent 40%, rgba(8,13,30,0.9) 100%);
   }
   .cod-card-ep {
-    position:absolute;top:10px;left:12px;
+    position:absolute;top:10px;right:12px;
     font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
     color:var(--cod);background:rgba(8,13,30,0.75);
     padding:4px 8px;border:1px solid rgba(200,216,255,0.25);
@@ -795,6 +796,28 @@
     transition:width 0.3s;
   }
   .cod-card:hover .cod-card-bar { width:100%; }
+
+  /* Top Ranks donut */
+  .kacky-chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .legend-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -894,6 +917,50 @@
             style="font-family:'Share Tech Mono',monospace;font-size:11px;fill:var(--text);font-weight:600;">—</text>
         </svg>
         <div class="kacky-chart-label">AVG RANK</div>
+      </div>
+
+      <!-- TOP RANKS -->
+      <div class="kacky-chart-wrap" style="flex-direction:row;align-items:center;gap:10px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <svg class="kacky-chart-svg" width="80" height="80" viewBox="0 0 80 80">
+          <!-- bg track -->
+          <circle cx="40" cy="40" r="30" fill="none" stroke="#3a3a4a" stroke-width="8"
+            transform="rotate(-90 40 40)"/>
+          <!-- other (grey) — full bg essentially -->
+          <circle id="chart-tops-other" cx="40" cy="40" r="30" fill="none"
+            stroke="#4a4a5a" stroke-width="8"
+            stroke-dasharray="188.5" stroke-dashoffset="0"
+            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+          <!-- top100 (bronze) -->
+          <circle id="chart-tops-100" cx="40" cy="40" r="30" fill="none"
+            stroke="#cd7f32" stroke-width="8"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"
+            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+          <!-- top50 (silver) -->
+          <circle id="chart-tops-50" cx="40" cy="40" r="30" fill="none"
+            stroke="#c0c0c0" stroke-width="8"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"
+            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+          <!-- top10 (gold) -->
+          <circle id="chart-tops-10" cx="40" cy="40" r="30" fill="none"
+            stroke="#ffd700" stroke-width="8"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"
+            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
+          <text id="chart-tops-val" x="40" y="45" text-anchor="middle"
+            style="font-family:'Share Tech Mono',monospace;font-size:10px;fill:var(--text);font-weight:600;">—</text>
+        </svg>
+          <div class="kacky-chart-label">TOP RANKS</div>
+        </div>
+        <div class="kacky-chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#ffd700"></span><span id="leg-t10">TOP 10 (0)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#c0c0c0"></span><span id="leg-t50">TOP 50 (0)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#cd7f32"></span><span id="leg-t100">TOP 100 (0)</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#4a4a5a"></span><span id="leg-other">OTHER (0)</span></div>
+        </div>
       </div>
 
     </div>
@@ -3208,7 +3275,7 @@
     <div class="rl-card" data-cat="episodes" data-yt-id="-cXHF48C1HU">
       <div class="rl-bar"></div>
       <div class="rl-thumb">
-        <img src="https://img.youtube.com/vi/-cXHF48C1HU/maxresdefault.jpg" alt="Rocket League Highlights — Episode 2" loading="lazy">
+        <img src="https://img.youtube.com/vi/-cXHF48C1HU/hqdefault.jpg" alt="Rocket League Highlights — Episode 2" loading="lazy">
         <div class="rl-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
       </div>
       <div class="rl-info">
@@ -3628,7 +3695,7 @@
   // ── Counts ──
   document.getElementById('kacky-count').textContent = cards.length + ' CLIPS';
   document.getElementById('rl-count').textContent    = document.querySelectorAll('.rl-card').length + ' CLIPS';
-  document.getElementById('cod-count').textContent   = document.querySelectorAll('.cod-row').length + ' CLIPS';
+  document.getElementById('cod-count').textContent = document.querySelectorAll('.cod-card').length + ' CLIPS';
 
   // ── Kacky search ──
   const kackySearch = document.getElementById('kacky-search');
@@ -3687,11 +3754,11 @@
 
   // ── Kacky charts ──
   const eventStats = {
-    all:  { clips: 140, total: 335, avgRank: 141 },
-    kr6:  { clips: 27,  total: 75,  avgRank: 160 },
-    kk10: { clips: 25,  total: 100, avgRank: 151 },
-    km4:  { clips: 63,  total: 100, avgRank: 129 },
-    kb2:  { clips: 25,  total: 60,  avgRank: null },
+    all:  { clips: 140, total: 335, avgRank: 141, t10:6,  t50:24, t100:20, other:65 },
+    kr6:  { clips: 27,  total: 75,  avgRank: 160, t10:1,  t50:4,  t100:7,  other:15 },
+    kk10: { clips: 25,  total: 100, avgRank: 151, t10:0,  t50:7,  t100:3,  other:15 },
+    km4:  { clips: 63,  total: 100, avgRank: 129, t10:5,  t50:13, t100:10, other:35 },
+    kb2:  { clips: 25,  total: 60,  avgRank: null,t10:0,  t50:0,  t100:0,  other:0  },
   };
   const CIRC = 188.5; // 2 * PI * 30
 
@@ -3716,6 +3783,51 @@
       rankTrack.style.strokeDashoffset = CIRC;
       rankEl.textContent = '—';
     }
+
+    // Top Ranks donut — stacked arcs
+    const total = d.t10 + d.t50 + d.t100 + d.other;
+    if (total > 0) {
+      // Each segment offset = CIRC - cumulative arc so far
+      const arcT10   = (d.t10   / total) * CIRC;
+      const arcT50   = (d.t50   / total) * CIRC;
+      const arcT100  = (d.t100  / total) * CIRC;
+
+      // other fills the rest — set its dashoffset to 0 (full circle), then overlay others on top
+      document.getElementById('chart-tops-other').style.strokeDasharray  = CIRC;
+      document.getElementById('chart-tops-other').style.strokeDashoffset = 0;
+
+      // top100 starts after other (from -90°, clockwise = decreasing offset)
+      // We rotate each layer by cumulative angle
+      const rotOther = -90;
+      const rot100   = rotOther + (d.other / total) * 360;
+      const rot50    = rot100  + (d.t100  / total) * 360;
+      const rot10    = rot50   + (d.t50   / total) * 360;
+
+      const el100 = document.getElementById('chart-tops-100');
+      el100.style.strokeDashoffset = CIRC - arcT100;
+      el100.setAttribute('transform', `rotate(${rot100} 40 40)`);
+
+      const el50 = document.getElementById('chart-tops-50');
+      el50.style.strokeDashoffset = CIRC - arcT50;
+      el50.setAttribute('transform', `rotate(${rot50} 40 40)`);
+
+      const el10 = document.getElementById('chart-tops-10');
+      el10.style.strokeDashoffset = CIRC - arcT10;
+      el10.setAttribute('transform', `rotate(${rot10} 40 40)`);
+
+      document.getElementById('chart-tops-val').textContent = d.t10 + d.t50 + d.t100;
+    } else {
+      ['chart-tops-10','chart-tops-50','chart-tops-100','chart-tops-other'].forEach(id => {
+        document.getElementById(id).style.strokeDashoffset = CIRC;
+      });
+      document.getElementById('chart-tops-val').textContent = '—';
+    }
+
+    // Legend
+    document.getElementById('leg-t10').textContent   = `TOP 10 (${d.t10})`;
+    document.getElementById('leg-t50').textContent   = `TOP 50 (${d.t50})`;
+    document.getElementById('leg-t100').textContent  = `TOP 100 (${d.t100})`;
+    document.getElementById('leg-other').textContent = `OTHER (${d.other})`;
   }
 
   // Init on load
