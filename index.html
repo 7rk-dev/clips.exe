@@ -690,8 +690,10 @@
     letter-spacing: 1px; color: #ff6060;
     background: rgba(0,0,0,0.65);
     border: 1px solid rgba(255,80,80,0.4);
-    padding: 5px 8px; line-height: 1;
+    padding: 0 8px;
+    height: 22px;
     display: flex; align-items: center; justify-content: center;
+    line-height: 1;
   }
 
   /* Map stats (PB + Rank) */
@@ -729,6 +731,7 @@
     gap: 2rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    width: 100%;
   }
   .kacky-toolbar .kacky-search-wrap { order: 1; }
   .kacky-charts {
@@ -818,6 +821,117 @@
     border-radius: 50%;
     flex-shrink: 0;
   }
+
+  /* Filter button & panel */
+  .kacky-filter-wrap {
+    position: relative;
+    margin-left: auto;
+    margin-right: 1.5rem;
+  }
+  .kacky-filter-btn {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-pixel); font-size: 7px; letter-spacing: 1px;
+    padding: 11px 16px;
+    border: 1px solid var(--border-hi);
+    background: var(--bg2); color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .kacky-filter-btn:hover { color: var(--kacky); border-color: var(--kacky); }
+  .kacky-filter-btn.active { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
+  .kacky-filter-btn svg { flex-shrink: 0; transition: transform 0.2s; }
+  .kacky-filter-btn.active svg { transform: rotate(180deg); }
+
+  .kacky-filter-panel {
+    display: none;
+    position: absolute; top: calc(100% + 6px); right: 0;
+    background: var(--bg2); border: 1px solid var(--border-hi);
+    min-width: 220px; z-index: 50;
+    flex-direction: column;
+  }
+  .kacky-filter-panel.open { display: flex; }
+
+  .filter-section-label {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px;
+    color: var(--text-dim); padding: 10px 14px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--text-muted); cursor: pointer;
+    transition: all 0.15s; border-bottom: 1px solid var(--border);
+  }
+  .filter-option:last-child { border-bottom: none; }
+  .filter-option:hover { color: var(--kacky); background: var(--kacky-dim); }
+  .filter-option.selected { color: var(--kacky); }
+  .filter-option .fcheck {
+    width: 6px; height: 6px; border-radius: 50%;
+    border: 1px solid var(--border-hi); flex-shrink: 0;
+  }
+  .filter-option.selected .fcheck { background: var(--kacky); border-color: var(--kacky); box-shadow: 0 0 4px var(--kacky-glow); }
+
+  /* Filter button & panel */
+  .kacky-filter-wrap {
+    position: relative;
+    order: 3;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .kacky-filter-btn {
+    font-family: var(--font-pixel);
+    font-size: 7px; letter-spacing: 1.5px;
+    padding: 12px 18px;
+    border: 1px solid var(--border-hi);
+    background: var(--bg2);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .kacky-filter-btn:hover { color: var(--kacky); border-color: var(--kacky); }
+  .kacky-filter-btn.active { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
+  .kacky-filter-btn svg { flex-shrink: 0; transition: transform 0.2s; }
+  .kacky-filter-btn.active svg { transform: rotate(180deg); }
+
+  .kacky-filter-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border-hi);
+    min-width: 220px;
+    z-index: 50;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .kacky-filter-panel.open { display: block; }
+
+  .filter-group { margin-bottom: 1rem; }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-group-label {
+    font-family: var(--font-mono);
+    font-size: 9px; letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .filter-options { display: flex; flex-direction: column; gap: 4px; }
+  .filter-opt {
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: 1px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .filter-opt:hover { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
+  .filter-opt.active { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
 </style>
 </head>
 <body>
@@ -964,6 +1078,41 @@
       </div>
 
     </div>
+    <div class="kacky-filter-wrap" id="kacky-filter-wrap">
+      <button class="kacky-filter-btn" id="kacky-filter-btn" onclick="toggleFilterPanel()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M1 3h10M3 6h6M5 9h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        FILTER
+      </button>
+      <div class="kacky-filter-panel" id="kacky-filter-panel">
+        <div class="filter-section-label">SORT BY</div>
+        <div class="filter-option selected" data-filter="default" onclick="applyFilter('default')">
+          <span class="fcheck"></span>MAP NUMBER (DEFAULT)
+        </div>
+        <div class="filter-option" data-filter="rank-asc" onclick="applyFilter('rank-asc')">
+          <span class="fcheck"></span>RANK (BEST FIRST)
+        </div>
+        <div class="filter-option" data-filter="rank-desc" onclick="applyFilter('rank-desc')">
+          <span class="fcheck"></span>RANK (WORST FIRST)
+        </div>
+        <div class="filter-option" data-filter="name-asc" onclick="applyFilter('name-asc')">
+          <span class="fcheck"></span>MAP NAME (A → Z)
+        </div>
+        <div class="filter-section-label" style="margin-top:2px;">SHOW</div>
+        <div class="filter-option selected" data-filter="show-all" onclick="applyFilter('show-all')">
+          <span class="fcheck"></span>ALL MAPS
+        </div>
+        <div class="filter-option" data-filter="show-fin" onclick="applyFilter('show-fin')">
+          <span class="fcheck"></span>FINISHED ONLY
+        </div>
+        <div class="filter-option" data-filter="show-notfin" onclick="applyFilter('show-notfin')">
+          <span class="fcheck"></span>NOT FIN ONLY
+        </div>
+      </div>
+    </div>
+
+    
     <div class="kacky-search-wrap" id="kacky-search-wrap">
     <div class="kacky-search-icon">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -3839,6 +3988,89 @@
       setTimeout(() => updateCharts(tab.dataset.event), 0);
     });
   });
+
+
+  // ── Kacky filter panel ──
+  let currentSort = 'default';
+  let currentShow = 'show-all';
+
+  function toggleFilterPanel() {
+    const btn   = document.getElementById('kacky-filter-btn');
+    const panel = document.getElementById('kacky-filter-panel');
+    btn.classList.toggle('active');
+    panel.classList.toggle('open');
+  }
+
+  // Close panel when clicking outside
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('kacky-filter-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('kacky-filter-btn').classList.remove('active');
+      document.getElementById('kacky-filter-panel').classList.remove('open');
+    }
+  });
+
+  function applyFilter(type) {
+    const sortFilters = ['default','rank-asc','rank-desc','name-asc'];
+    const showFilters = ['show-all','show-fin','show-notfin'];
+
+    if (sortFilters.includes(type)) currentSort = type;
+    if (showFilters.includes(type)) currentShow = type;
+
+    // Update selected state
+    document.querySelectorAll('.filter-option').forEach(opt => {
+      const f = opt.dataset.filter;
+      const active = (sortFilters.includes(f) && f === currentSort) ||
+                     (showFilters.includes(f) && f === currentShow);
+      opt.classList.toggle('selected', active);
+    });
+
+    const grid = document.querySelector('.kacky-grid');
+    const allCards = [...document.querySelectorAll('.map-card')];
+
+    // Get active event tab
+    const activeTab = document.querySelector('.etab.active');
+    const activeEvent = activeTab ? activeTab.dataset.event : 'all';
+
+    // Filter by event + show
+    allCards.forEach(c => {
+      const matchEvent = activeEvent === 'all' || c.dataset.event === activeEvent;
+      const isNotFin   = c.classList.contains('not-fin');
+      const matchShow  = currentShow === 'show-all'    ? true
+                       : currentShow === 'show-fin'    ? !isNotFin
+                       : currentShow === 'show-notfin' ? isNotFin
+                       : true;
+      const query = document.getElementById('kacky-search').value.trim().toLowerCase();
+      const matchSearch = !query
+        || c.dataset.map.toLowerCase().includes(query)
+        || c.dataset.name.toLowerCase().includes(query);
+      c.classList.toggle('hidden', !(matchEvent && matchShow && matchSearch));
+    });
+
+    // Sort visible cards in DOM
+    const visibleCards = allCards.filter(c => !c.classList.contains('hidden'));
+    visibleCards.sort((a, b) => {
+      if (currentSort === 'rank-asc' || currentSort === 'rank-desc') {
+        const raEl = a.querySelectorAll('.map-stat-value')[1];
+        const rbEl = b.querySelectorAll('.map-stat-value')[1];
+        const ra = raEl ? parseInt(raEl.textContent.replace('#','')) || 9999 : 9999;
+        const rb = rbEl ? parseInt(rbEl.textContent.replace('#','')) || 9999 : 9999;
+        return currentSort === 'rank-asc' ? ra - rb : rb - ra;
+      }
+      if (currentSort === 'name-asc') {
+        return a.dataset.name.localeCompare(b.dataset.name);
+      }
+      // default: map number
+      const na = parseInt(a.dataset.map.replace(/[^0-9]/g,'')) || 0;
+      const nb = parseInt(b.dataset.map.replace(/[^0-9]/g,'')) || 0;
+      return na - nb;
+    });
+
+    visibleCards.forEach(c => grid.appendChild(c));
+
+    // Update count
+    document.getElementById('kacky-count').textContent = visibleCards.length + ' CLIPS';
+  }
 
 </script>
 </body>
