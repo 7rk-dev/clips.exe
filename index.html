@@ -40,9 +40,21 @@
 
     /* CALL OF DUTY — icy silver-white */
     --cod:        #c8d8ff;
+
+  /* ── EXTRAS section ── */
+  --extras:      #00d4ff;
+  --extras-dim:  rgba(0,212,255,0.10);
+  --extras-glow: rgba(0,212,255,0.40);
+  --extras-dark: rgba(0,212,255,0.05);
     --cod-dim:    rgba(200,216,255,0.1);
     --cod-glow:   rgba(200,216,255,0.35);
     --cod-dark:   rgba(200,216,255,0.04);
+
+  /* ── EXTRAS section ── */
+  --extras:      #00d4ff;
+  --extras-dim:  rgba(0,212,255,0.1);
+  --extras-glow: rgba(0,212,255,0.4);
+  --extras-dark: rgba(0,212,255,0.05);
 
     --font-pixel: 'Press Start 2P', monospace;
     --font-body:  'Barlow Condensed', sans-serif;
@@ -201,6 +213,9 @@
   .cta-r:hover { box-shadow:0 0 28px var(--rl-glow); }
 
   .cta-c { border-color:var(--cod);color:var(--cod); }
+  .cta-x { border-color:var(--extras);color:var(--extras); }
+  .cta-x::before { background:var(--extras-dim); }
+  .cta-x:hover { box-shadow:0 0 28px var(--extras-glow); }
   .cta-c::before { background:var(--cod-dim); }
   .cta-c:hover { box-shadow:0 0 28px var(--cod-glow); }
 
@@ -622,18 +637,19 @@
     display: flex;
     align-items: center;
     gap: 0;
-    margin-bottom: 1.5rem;
     border: 1px solid var(--border-hi);
     width: fit-content;
     min-width: 320px;
+    height: 46px;
     background: var(--bg2);
   }
   .kacky-search-icon {
-    padding: 0 14px;
+    padding: 0 12px;
     color: var(--text-dim);
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    height: 44px;
   }
   .kacky-search {
     background: transparent;
@@ -643,7 +659,8 @@
     font-size: 13px;
     letter-spacing: 1px;
     color: var(--text);
-    padding: 12px 16px 12px 0;
+    padding: 0 16px 0 0;
+    height: 44px;
     width: 260px;
   }
   .kacky-search::placeholder { color: var(--text-dim); }
@@ -877,18 +894,20 @@
     order: 3;
     margin-left: auto;
     margin-right: 0;
+    display: flex;
+    align-items: stretch;
   }
   .kacky-filter-btn {
-    font-family: var(--font-pixel);
-    font-size: 7px; letter-spacing: 1.5px;
-    padding: 12px 18px;
+    padding: 0 14px;
+    height: 46px;
+    width: 46px;
     border: 1px solid var(--border-hi);
     background: var(--bg2);
     color: var(--text-muted);
     cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; justify-content: center;
     transition: all 0.15s;
-    white-space: nowrap;
+    flex-shrink: 0;
   }
   .kacky-filter-btn:hover { color: var(--kacky); border-color: var(--kacky); }
   .kacky-filter-btn.active { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
@@ -932,6 +951,118 @@
   }
   .filter-opt:hover { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
   .filter-opt.active { color: var(--kacky); border-color: var(--kacky); background: var(--kacky-dim); }
+
+  /* Extras section */
+  .s-extras { background: radial-gradient(ellipse 60% 40% at 20% 50%, var(--extras-dark), transparent); }
+  .s-extras .sec-icon  { background:var(--extras-dim);border:1px solid rgba(0,212,255,0.18); }
+  .s-extras .sec-label { color:var(--extras); }
+
+  .extras-tabs {
+    display:flex;gap:0;flex-wrap:wrap;
+    border:1px solid var(--border);width:fit-content;
+    margin-bottom:2rem;
+  }
+  .extras-tab {
+    font-family:var(--font-pixel);font-size:8px;letter-spacing:1.5px;
+    padding:14px 24px;border:none;background:transparent;
+    color:var(--text-muted);cursor:pointer;
+    border-right:1px solid var(--border);
+    transition:all 0.15s;white-space:nowrap;
+  }
+  .extras-tab:last-child { border-right:none; }
+  .extras-tab:hover  { color:var(--extras);background:var(--extras-dim); }
+  .extras-tab.active { color:var(--extras);background:var(--extras-dim);box-shadow:inset 0 -3px 0 var(--extras); }
+
+  .extras-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.5rem; }
+
+  .extras-card {
+    background:var(--bg2);border:1px solid var(--border);
+    overflow:hidden;cursor:pointer;position:relative;
+    transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+  }
+  .extras-card:hover {
+    border-color:rgba(0,212,255,0.4);
+    transform:translateY(-3px);
+    box-shadow:0 8px 32px rgba(0,212,255,0.1);
+  }
+  .extras-thumb { position:relative;padding-bottom:56.25%;background:var(--bg3);overflow:hidden; }
+  .extras-thumb img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;transition:opacity 0.2s; }
+  .extras-card:hover .extras-thumb img { opacity:0.95; }
+  .extras-play { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+  .extras-play svg { width:50px;height:50px;opacity:0.85;filter:drop-shadow(0 0 12px var(--extras-glow));transition:transform 0.2s,opacity 0.2s; }
+  .extras-card:hover .extras-play svg { transform:scale(1.1);opacity:1; }
+  .extras-game-badge {
+    position:absolute;top:10px;left:12px;
+    font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
+    color:var(--extras);background:rgba(8,13,30,0.8);
+    padding:4px 8px;border:1px solid rgba(0,212,255,0.3);
+    display:flex;align-items:center;line-height:1;
+  }
+  .extras-info { padding:1rem 1.25rem; }
+  .extras-title { font-size:19px;font-weight:800;margin-bottom:4px; }
+  .extras-meta  { font-family:var(--font-mono);font-size:10px;color:var(--text-dim); }
+  .extras-bar   { position:absolute;top:0;left:0;width:3px;height:0;background:var(--extras);box-shadow:0 0 10px var(--extras-glow);transition:height 0.3s; }
+  .extras-card:hover .extras-bar { height:100%; }
+
+  /* Extras section styles */
+  .s-extras { background: radial-gradient(ellipse 60% 40% at 20% 50%, var(--extras-dark), transparent); }
+  .s-extras .sec-icon { background:var(--extras-dim);border:1px solid rgba(0,212,255,0.18); }
+  .s-extras .sec-label { color:var(--extras); }
+
+  .extras-tabs {
+    display:flex;gap:0;flex-wrap:wrap;
+    border:1px solid var(--border);width:fit-content;
+    margin-bottom:2rem;
+  }
+  .etab-x {
+    font-family:var(--font-pixel);font-size:8px;letter-spacing:1.5px;
+    padding:14px 24px;border:none;background:transparent;
+    color:var(--text-muted);cursor:pointer;
+    border-right:1px solid var(--border);
+    transition:all 0.15s;white-space:nowrap;
+  }
+  .etab-x:last-child { border-right:none; }
+  .etab-x:hover  { color:var(--extras);background:var(--extras-dim); }
+  .etab-x.active { color:var(--extras);background:var(--extras-dim);box-shadow:inset 0 -3px 0 var(--extras); }
+
+  .extras-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:1.5rem;
+  }
+  .extras-card {
+    background:var(--bg2);border:1px solid var(--border);
+    overflow:hidden;cursor:pointer;position:relative;
+    transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+  }
+  .extras-card:hover {
+    border-color:rgba(0,212,255,0.4);
+    transform:translateY(-3px);
+    box-shadow:0 8px 32px rgba(0,212,255,0.08);
+  }
+  .extras-thumb { position:relative;padding-bottom:56.25%;background:var(--bg3);overflow:hidden; }
+  .extras-thumb img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;transition:opacity 0.2s; }
+  .extras-card:hover .extras-thumb img { opacity:0.95; }
+  .extras-play { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+  .extras-play svg { width:50px;height:50px;opacity:0.85;filter:drop-shadow(0 0 12px var(--extras-glow));transition:transform 0.2s,opacity 0.2s; }
+  .extras-card:hover .extras-play svg { transform:scale(1.1);opacity:1; }
+  .extras-game-badge {
+    position:absolute;top:10px;left:12px;
+    font-family:var(--font-pixel);font-size:7px;letter-spacing:1px;
+    color:var(--extras);background:rgba(8,13,30,0.8);
+    padding:4px 8px;border:1px solid rgba(0,212,255,0.25);
+    display:flex;align-items:center;line-height:1;
+  }
+  .extras-info { padding:1rem 1.25rem; }
+  .extras-title { font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px; }
+  .extras-meta  { font-family:var(--font-mono);font-size:11px;color:var(--text-dim); }
+  .extras-bar   { position:absolute;top:0;left:0;width:3px;height:0;background:var(--extras);box-shadow:0 0 10px var(--extras-glow);transition:height 0.3s; }
+  .extras-card:hover .extras-bar { height:100%; }
+  .extras-card.hidden { display:none; }
+
+
+
+
 </style>
 </head>
 <body>
@@ -943,6 +1074,7 @@
     <li><a href="#kacky" class="n-k"><span class="ndot dk"></span>KACKY</a></li>
     <li><a href="#rl"    class="n-r"><span class="ndot dr"></span>ROCKET LEAGUE</a></li>
     <li><a href="#cod"   class="n-c"><span class="ndot dc"></span>CALL OF DUTY</a></li>
+    <li><a href="#extras" class="n-e"><span class="ndot" style="background:var(--extras);box-shadow:0 0 5px var(--extras);"></span>EXTRAS</a></li>
   </ul>
 </nav>
 
@@ -962,6 +1094,7 @@
     <a href="#kacky" class="cta cta-k">KACKY</a>
     <a href="#rl"    class="cta cta-r">ROCKET LEAGUE</a>
     <a href="#cod"   class="cta cta-c">CALL OF DUTY</a>
+    <a href="#extras" class="cta cta-x">EXTRAS</a>
   </div>
   <div class="scroll-cue">SCROLL</div>
 </div>
@@ -1050,19 +1183,19 @@
           <circle id="chart-tops-100" cx="40" cy="40" r="30" fill="none"
             stroke="#cd7f32" stroke-width="8"
             stroke-dasharray="188.5" stroke-dashoffset="188.5"
-            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            stroke-linecap="round" transform="rotate(-90 40 40)"
             style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
           <!-- top50 (silver) -->
           <circle id="chart-tops-50" cx="40" cy="40" r="30" fill="none"
             stroke="#c0c0c0" stroke-width="8"
             stroke-dasharray="188.5" stroke-dashoffset="188.5"
-            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            stroke-linecap="round" transform="rotate(-90 40 40)"
             style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
           <!-- top10 (gold) -->
           <circle id="chart-tops-10" cx="40" cy="40" r="30" fill="none"
             stroke="#ffd700" stroke-width="8"
             stroke-dasharray="188.5" stroke-dashoffset="188.5"
-            stroke-linecap="butt" transform="rotate(-90 40 40)"
+            stroke-linecap="round" transform="rotate(-90 40 40)"
             style="transition: stroke-dashoffset 0.9s cubic-bezier(0.4,0,0.2,1)"/>
           <text id="chart-tops-val" x="40" y="45" text-anchor="middle"
             style="font-family:'Share Tech Mono',monospace;font-size:10px;fill:var(--text);font-weight:600;">—</text>
@@ -1079,11 +1212,10 @@
 
     </div>
     <div class="kacky-filter-wrap" id="kacky-filter-wrap">
-      <button class="kacky-filter-btn" id="kacky-filter-btn" onclick="toggleFilterPanel()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M1 3h10M3 6h6M5 9h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <button class="kacky-filter-btn" id="kacky-filter-btn" onclick="toggleFilterPanel()" title="Filter &amp; Sort">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        FILTER
       </button>
       <div class="kacky-filter-panel" id="kacky-filter-panel">
         <div class="filter-section-label">SORT BY</div>
@@ -3651,6 +3783,96 @@
   </div>
 </div>
 
+<!-- ══════════ EXTRAS ══════════ -->
+<div class="divider-animated" style="height:1px;position:relative;z-index:1;margin:0 4rem;background-size:300% auto;animation:divider-flow 12s linear infinite;background-image:linear-gradient(90deg,transparent 0%,transparent 15%,var(--extras) 40%,var(--extras) 60%,transparent 85%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,black 8%,black 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0%,black 8%,black 92%,transparent 100%);"></div>
+<section id="extras" class="s-extras">
+  <div class="sec-hdr">
+    <div class="sec-icon">🎮</div>
+    <div class="sec-meta">
+      <div class="sec-label">VARIOUS GAMES</div>
+      <h2 class="sec-title">EXTRAS</h2>
+    </div>
+    <div class="sec-count" id="extras-count"></div>
+  </div>
+
+  <!-- TABS
+       ADD A GAME: <button class="etab-x" data-game="yourgame">GAME NAME</button>
+       then add data-game="yourgame" on matching extras-card elements -->
+  <div class="extras-tabs">
+    <button class="etab-x active" data-game="all">ALL</button>
+    <button class="etab-x" data-game="fortnite">FORTNITE</button>
+    <button class="etab-x" data-game="gta">GTA</button>
+    <button class="etab-x" data-game="multiversus">MULTIVERSUS</button>
+    <button class="etab-x" data-game="sonic">SONIC CROSSWORLDS</button>
+    <button class="etab-x" data-game="xdefiant">XDEFIANT</button>
+  </div>
+
+  <div class="extras-grid" id="extras-grid">
+    <!-- ADD A CLIP: copy an extras-card block, set data-game and data-yt-id -->
+    <div class="extras-card" data-game="fortnite" data-yt-id="dQw4w9WgXcQ">
+      <div class="extras-bar"></div>
+      <div class="extras-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="FORTNITE" loading="lazy">
+        <div class="extras-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+        <div class="extras-game-badge">FORTNITE</div>
+      </div>
+      <div class="extras-info">
+        <div class="extras-title">Clip title here</div>
+        <div class="extras-meta">MODE // DETAILS</div>
+      </div>
+    </div>
+    <div class="extras-card" data-game="gta" data-yt-id="dQw4w9WgXcQ">
+      <div class="extras-bar"></div>
+      <div class="extras-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="GTA" loading="lazy">
+        <div class="extras-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+        <div class="extras-game-badge">GTA</div>
+      </div>
+      <div class="extras-info">
+        <div class="extras-title">Clip title here</div>
+        <div class="extras-meta">MODE // DETAILS</div>
+      </div>
+    </div>
+    <div class="extras-card" data-game="multiversus" data-yt-id="dQw4w9WgXcQ">
+      <div class="extras-bar"></div>
+      <div class="extras-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="MULTIVERSUS" loading="lazy">
+        <div class="extras-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+        <div class="extras-game-badge">MULTIVERSUS</div>
+      </div>
+      <div class="extras-info">
+        <div class="extras-title">Clip title here</div>
+        <div class="extras-meta">MODE // DETAILS</div>
+      </div>
+    </div>
+    <div class="extras-card" data-game="sonic" data-yt-id="dQw4w9WgXcQ">
+      <div class="extras-bar"></div>
+      <div class="extras-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="SONIC CROSSWORLDS" loading="lazy">
+        <div class="extras-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+        <div class="extras-game-badge">SONIC CROSSWORLDS</div>
+      </div>
+      <div class="extras-info">
+        <div class="extras-title">Clip title here</div>
+        <div class="extras-meta">MODE // DETAILS</div>
+      </div>
+    </div>
+    <div class="extras-card" data-game="xdefiant" data-yt-id="dQw4w9WgXcQ">
+      <div class="extras-bar"></div>
+      <div class="extras-thumb">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="XDEFIANT" loading="lazy">
+        <div class="extras-play"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="white" stroke-width="1.5" fill="rgba(0,0,0,0.45)"/><polygon points="19,14 38,24 19,34" fill="white"/></svg></div>
+        <div class="extras-game-badge">XDEFIANT</div>
+      </div>
+      <div class="extras-info">
+        <div class="extras-title">Clip title here</div>
+        <div class="extras-meta">MODE // DETAILS</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <footer>
   <div class="f-logo">CLIPS<em>.</em>EXE</div>
   <div class="f-sub">MADE FOR THE LOVE OF GAMING</div>
@@ -3936,33 +4158,33 @@
     // Top Ranks donut — stacked arcs
     const total = d.t10 + d.t50 + d.t100 + d.other;
     if (total > 0) {
-      // Each segment offset = CIRC - cumulative arc so far
-      const arcT10   = (d.t10   / total) * CIRC;
-      const arcT50   = (d.t50   / total) * CIRC;
-      const arcT100  = (d.t100  / total) * CIRC;
+      const arcT10  = (d.t10  / total) * CIRC;
+      const arcT50  = (d.t50  / total) * CIRC;
+      const arcT100 = (d.t100 / total) * CIRC;
 
-      // other fills the rest — set its dashoffset to 0 (full circle), then overlay others on top
+      // Grey background fills the full circle
       document.getElementById('chart-tops-other').style.strokeDasharray  = CIRC;
       document.getElementById('chart-tops-other').style.strokeDashoffset = 0;
+      document.getElementById('chart-tops-other').setAttribute('transform', 'rotate(-90 40 40)');
 
-      // top100 starts after other (from -90°, clockwise = decreasing offset)
-      // We rotate each layer by cumulative angle
-      const rotOther = -90;
-      const rot100   = rotOther + (d.other / total) * 360;
-      const rot50    = rot100  + (d.t100  / total) * 360;
-      const rot10    = rot50   + (d.t50   / total) * 360;
+      // Clockwise from top (-90°):
+      // Gold first, then silver after gold, then bronze after silver
+      const startTop = -90;
+      const rot10  = startTop;
+      const rot50  = startTop + (d.t10  / total) * 360;
+      const rot100 = startTop + (d.t10 + d.t50) / total * 360;
 
-      const el100 = document.getElementById('chart-tops-100');
-      el100.style.strokeDashoffset = CIRC - arcT100;
-      el100.setAttribute('transform', `rotate(${rot100} 40 40)`);
+      const el10 = document.getElementById('chart-tops-10');
+      el10.style.strokeDashoffset = CIRC - arcT10;
+      el10.setAttribute('transform', `rotate(${rot10} 40 40)`);
 
       const el50 = document.getElementById('chart-tops-50');
       el50.style.strokeDashoffset = CIRC - arcT50;
       el50.setAttribute('transform', `rotate(${rot50} 40 40)`);
 
-      const el10 = document.getElementById('chart-tops-10');
-      el10.style.strokeDashoffset = CIRC - arcT10;
-      el10.setAttribute('transform', `rotate(${rot10} 40 40)`);
+      const el100 = document.getElementById('chart-tops-100');
+      el100.style.strokeDashoffset = CIRC - arcT100;
+      el100.setAttribute('transform', `rotate(${rot100} 40 40)`);
 
       document.getElementById('chart-tops-val').textContent = d.t10 + d.t50 + d.t100;
     } else {
@@ -4071,6 +4293,59 @@
     // Update count
     document.getElementById('kacky-count').textContent = visibleCards.length + ' CLIPS';
   }
+
+
+  // ── Extras tabs ──
+  const extrasCards = document.querySelectorAll('.extras-card');
+  document.querySelectorAll('.extras-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.extras-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const game = tab.dataset.game;
+      let n = 0;
+      extrasCards.forEach(c => {
+        const show = game === 'all' || c.dataset.game === game;
+        c.style.display = show ? '' : 'none';
+        if (show) n++;
+      });
+      document.getElementById('extras-count').textContent = n + ' CLIPS';
+    });
+  });
+
+  // ── Extras cards ──
+  extrasCards.forEach(c => c.addEventListener('click', () =>
+    openModal(c.dataset.ytId,
+      c.querySelector('.extras-title').textContent,
+      c.querySelector('.extras-meta').textContent, [], [])));
+
+  // ── Extras count ──
+  document.getElementById('extras-count').textContent = extrasCards.length + ' CLIPS';
+
+  // ── Extras tabs ──
+  const extraCards = document.querySelectorAll('.extras-card');
+  document.querySelectorAll('.etab-x').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.etab-x').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const game = tab.dataset.game;
+      let n = 0;
+      extraCards.forEach(c => {
+        const show = game === 'all' || c.dataset.game === game;
+        c.classList.toggle('hidden', !show);
+        if (show) n++;
+      });
+      document.getElementById('extras-count').textContent = n + ' CLIPS';
+    });
+  });
+
+  // Extras card click
+  extraCards.forEach(c => c.addEventListener('click', () =>
+    openModal(c.dataset.ytId,
+      c.querySelector('.extras-title').textContent,
+      c.querySelector('.extras-meta').textContent, [], [])));
+
+  // Extras count init
+  document.getElementById('extras-count').textContent = extraCards.length + ' CLIPS';
 
 </script>
 </body>
