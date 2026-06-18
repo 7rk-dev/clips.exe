@@ -4769,10 +4769,12 @@
   });
 
   // ── Extras cards ──
-  extrasCards.forEach(c => c.addEventListener('click', () =>
+  extrasCards.forEach(c => c.addEventListener('click', () => {
+    const metaEl = c.querySelector('.extras-meta');
     openModal(c.dataset.ytId,
       c.querySelector('.extras-title').textContent,
-      c.querySelector('.extras-meta').textContent, [], [])));
+      metaEl ? metaEl.textContent : '', [], []);
+  }));
 
   // ── Extras count ──
   document.getElementById('extras-count').textContent = extrasCards.length + ' CLIPS';
@@ -4795,10 +4797,12 @@
   });
 
   // Extras card click
-  extraCards.forEach(c => c.addEventListener('click', () =>
+  extraCards.forEach(c => c.addEventListener('click', () => {
+    const metaEl = c.querySelector('.extras-meta');
     openModal(c.dataset.ytId,
       c.querySelector('.extras-title').textContent,
-      c.querySelector('.extras-meta').textContent, [], [])));
+      metaEl ? metaEl.textContent : '', [], []);
+  }));
 
   // Extras count init
   document.getElementById('extras-count').textContent = extraCards.length + ' CLIPS';
