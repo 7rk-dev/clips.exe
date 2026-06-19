@@ -1050,3 +1050,15 @@
   .extras-bar   { position:absolute;top:0;left:0;width:3px;height:0;background:var(--extras);box-shadow:0 0 10px var(--extras-glow);transition:height 0.3s; }
   .extras-card:hover .extras-bar { height:100%; }
   .extras-card.hidden { display:none; }
+/* ── Typewriter effect on hero title ── */
+.tw-cursor {
+  display: inline-block;
+  width: 3px;
+  background: currentColor;
+  margin-left: 4px;
+  animation: tw-blink 0.8s step-end infinite;
+}
+@keyframes tw-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}

@@ -469,3 +469,92 @@ function buildEmbedUrl(ytId) {
 
   // Extras count init
   document.getElementById('extras-count').textContent = extraCards.length + ' CLIPS';
+// ── Typewriter effect on hero title ──
+(function() {
+  const line1El = document.getElementById('tw-line1');
+  const line2El = document.getElementById('tw-line2');
+  if (!line1El || !line2El) return;
+
+  const word1 = 'VAULT';
+  const word2 = 'HIGHLIGHTS';
+  const typeSpeed = 75;     // ms per letter
+  const pauseBetween = 200; // ms pause between words
+  const cursorHtml = '<span class="tw-cursor">&nbsp;</span>';
+
+  let i = 0;
+
+  function typeWord(word, el, onDone) {
+    el.innerHTML = cursorHtml;
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx++;
+      el.innerHTML = word.slice(0, idx) + cursorHtml;
+      if (idx >= word.length) {
+        clearInterval(interval);
+        setTimeout(onDone, pauseBetween);
+      }
+    }, typeSpeed);
+  }
+
+  function start() {
+    line1El.innerHTML = '';
+    line2El.innerHTML = '';
+    typeWord(word1, line1El, () => {
+      line1El.innerHTML = word1; // remove cursor from line 1
+      typeWord(word2, line2El, () => {
+        // Leave cursor blinking at the end briefly, then remove
+        setTimeout(() => { line2El.innerHTML = word2; }, 1200);
+      });
+    });
+  }
+
+  start();
+})();
+
+// ── Animated counter on scroll-into-view ──
+(function() {
+  const countIds = ['kacky-count', 'rl-count', 'cod-count', 'extras-count'];
+  const animated = new Set();
+
+  function animateCount(el) {
+    const finalText = el.textContent.trim();
+    const match = finalText.match(/^(\d+)(.*)$/);
+    if (!match) return;
+
+    const target = parseInt(match[1], 10);
+    const suffix = match[2]; // e.g. " CLIPS"
+    const duration = 1800;
+    const start = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // ease-out
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = target + suffix; // ensure exact final value
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !animated.has(entry.target.id)) {
+        animated.add(entry.target.id);
+        animateCount(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  // Wait a tick so the existing count-setting JS runs first
+  window.addEventListener('load', () => {
+    countIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  });
+})();
