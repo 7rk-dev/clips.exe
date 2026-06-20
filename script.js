@@ -511,10 +511,10 @@ function buildEmbedUrl(ytId) {
   start();
 })();
 
-// ── Animated counter on scroll-into-view ──
+// ── Animated counter on scroll-into-view AND on tab click ──
 (function() {
   const countIds = ['kacky-count', 'rl-count', 'cod-count', 'extras-count'];
-  const animated = new Set();
+  const seenOnce = new Set();
 
   function animateCount(el) {
     const finalText = el.textContent.trim();
@@ -523,7 +523,7 @@ function buildEmbedUrl(ytId) {
 
     const target = parseInt(match[1], 10);
     const suffix = match[2]; // e.g. " CLIPS"
-    const duration = 1800;
+    const duration = 2800;
     const start = performance.now();
 
     function tick(now) {
@@ -540,21 +540,43 @@ function buildEmbedUrl(ytId) {
     }
     requestAnimationFrame(tick);
   }
+  window.animateCount = animateCount; // expose for tab-click re-trigger
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && !animated.has(entry.target.id)) {
-        animated.add(entry.target.id);
+      if (entry.isIntersecting && !seenOnce.has(entry.target.id)) {
+        seenOnce.add(entry.target.id);
         animateCount(entry.target);
       }
     });
   }, { threshold: 0.6 });
 
-  // Wait a tick so the existing count-setting JS runs first
   window.addEventListener('load', () => {
     countIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
+    });
+
+    // Re-animate the relevant counter whenever a category tab is clicked,
+    // after the existing filter logic has updated its text content.
+    const tabSelectors = ['.etab', '.etab-x', '.rl-tab'];
+    const tabToCountId = {
+      '.etab':    'kacky-count',
+      '.etab-x':  'extras-count',
+      '.rl-tab':  'rl-count',
+    };
+
+    tabSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(tab => {
+        tab.addEventListener('click', () => {
+          const countId = tabToCountId[sel];
+          const el = document.getElementById(countId);
+          if (el) {
+            // Wait a tick so the existing click handler updates the count text first
+            setTimeout(() => animateCount(el), 0);
+          }
+        });
+      });
     });
   });
 })();

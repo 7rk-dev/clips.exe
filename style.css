@@ -123,8 +123,9 @@
   .nav-links a.n-k:hover { color: var(--kacky); }
   .nav-links a.n-r:hover { color: var(--rl); }
   .nav-links a.n-c:hover { color: var(--cod); }
+  .nav-links a.n-e:hover { color: var(--extras); }
 
-  .ndot { width:5px;height:5px;border-radius:1px;flex-shrink:0;display:inline-block; }
+  .ndot { width:5px;height:5px;border-radius:1px;flex-shrink:0;display:block;transform:translateY(-3px); }
   .dk { background:var(--kacky); box-shadow:0 0 5px var(--kacky); }
   .dr { background:var(--rl);    box-shadow:0 0 5px var(--rl); }
   .dc { background:var(--cod);   box-shadow:0 0 5px var(--cod); }
