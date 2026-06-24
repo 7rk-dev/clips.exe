@@ -1200,3 +1200,12 @@
     padding: 10px 8px !important;
   }
 }
+
+/* ══ MOBILE: les traits de séparation animés gardent une marge fixe (4rem)
+   pensée pour le desktop -> proportionnellement énorme sur petit écran.
+   On la réduit pour que le trait occupe une largeur comparable au desktop. ══ */
+@media (max-width: 620px) {
+  .divider-animated {
+    margin: 0 1.25rem !important; /* l'inline style sur la section Extras impose !important pour être surclassé */
+  }
+}
