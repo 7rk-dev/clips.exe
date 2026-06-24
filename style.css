@@ -337,6 +337,7 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .etab:last-child { border-right:none; }
@@ -483,6 +484,7 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .rl-tab:last-child { border-right:none; }
@@ -1056,6 +1058,7 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .etab-x:last-child { border-right:none; }
@@ -1179,5 +1182,21 @@
     flex: 1 1 100%;
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ══ MOBILE: aligner l'agencement des onglets RL & Extras sur celui de Kacky ══ */
+/* Le correctif mobile existant (flex:1 + width:100%) n'avait été appliqué
+   qu'à .etab (Kacky). On l'étend ici à .rl-tab et .etab-x. */
+@media (max-width: 620px) {
+  .rl-tabs,
+  .extras-tabs {
+    width: 100% !important;
+  }
+  .rl-tab,
+  .etab-x {
+    flex: 1 1 auto !important;
+    text-align: center !important;
+    padding: 10px 8px !important;
   }
 }
