@@ -131,6 +131,28 @@
   .dr { background:var(--rl);    box-shadow:0 0 5px var(--rl); }
   .dc { background:var(--cod);   box-shadow:0 0 5px var(--cod); }
 
+  /* Bouton burger — masqué sur desktop, affiché en media query mobile */
+  .nav-burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 1px solid var(--border-hi);
+    cursor: pointer;
+    padding: 0;
+  }
+  .nav-burger span {
+    display: block; width: 16px; height: 2px;
+    margin: 0 auto;
+    background: var(--text);
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .nav-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
   /* ══ HERO ══ */
   .hero {
     position: relative; z-index:1;
@@ -617,12 +639,34 @@
 
   @media(max-width:620px){
     nav{padding:0 1rem;}
-    .nav-links a{padding:8px 9px;font-size:5.5px;}
+    .nav-burger{ display:flex; }
+    .nav-links{
+      display:none;
+      position:fixed; top:58px; left:0; right:0;
+      flex-direction:column;
+      background:rgba(8,13,30,0.97);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      max-height:calc(100vh - 58px);
+      overflow-y:auto;
+    }
+    .nav-links.mobile-open{ display:flex; }
+    .nav-links a{
+      padding:16px 1.25rem;font-size:9px;
+      border-left:none; border-bottom:1px solid var(--border);
+      width:100%; box-sizing:border-box;
+    }
+    .nav-links li:last-child a{ border-right:none; }
     section{padding:4rem 1rem;}
     .cod-row{grid-template-columns:38px 1fr;} .cod-thumb{display:none;}
     .cod-btn{display:none;}
     .event-tabs{width:100%;}
     .etab{flex:1;text-align:center;padding:10px 8px;}
+
+    /* Lueurs néon de la page d'accueil : nettement plus petites sur mobile */
+    .glow-v{width:260px;height:220px;}
+    .glow-g{width:220px;height:180px;}
+    .glow-b{width:320px;height:140px;}
   }
 
   /* Search bar */

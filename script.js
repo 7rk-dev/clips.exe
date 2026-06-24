@@ -617,3 +617,30 @@ function buildEmbedUrl(ytId) {
     });
   });
 })();
+
+// ══ MOBILE BURGER MENU ══
+(() => {
+  const burger = document.getElementById('navBurger');
+  const navLinks = document.getElementById('navLinks');
+  if (!burger || !navLinks) return;
+
+  function closeMenu() {
+    navLinks.classList.remove('mobile-open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('mobile-open');
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Ferme le menu une fois qu'on a choisi une section
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Ferme le menu si on repasse en affichage desktop (resize / rotation)
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 620) closeMenu();
+  });
+})();
