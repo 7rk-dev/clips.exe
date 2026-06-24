@@ -1148,3 +1148,36 @@
   80%  { transform: translate(-1px, -1px); opacity: 0.4; }
   100% { transform: translate(0, 0); opacity: 0; }
 }
+
+/* ══ MOBILE: filtre Kacky à côté de la recherche, pas sous les graphiques ══ */
+/* Placée en fin de fichier pour passer devant les règles desktop (order:3 /
+   margin-left:auto) qui, faute de media query, s'appliquaient aussi en mobile. */
+@media (max-width: 620px) {
+  .kacky-toolbar { gap: 0.6rem; }
+
+  .kacky-search-wrap {
+    order: 1 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    flex: 1 1 auto;
+  }
+  .kacky-search {
+    width: 100% !important;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .kacky-filter-wrap {
+    order: 2 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    flex: 0 0 auto;
+  }
+
+  .kacky-charts {
+    order: 3 !important;
+    flex: 1 1 100%;
+    width: 100%;
+    justify-content: center;
+  }
+}
