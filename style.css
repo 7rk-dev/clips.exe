@@ -558,15 +558,17 @@
     box-shadow:0 0 12px rgba(51,32,125,0.6);
   }
   .modal-hdr {
-    display:flex;align-items:center;justify-content:space-between;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
     padding:1rem 1.5rem;border-bottom:1px solid var(--border);
   }
+  .modal-hdr > div:first-child { flex:1 1 auto;min-width:0; }
   .modal-sub  { font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-bottom:2px; }
-  .modal-name { font-family:var(--font-pixel);font-size:8px;letter-spacing:1px; }
+  .modal-name { font-family:var(--font-pixel);font-size:8px;letter-spacing:1px;line-height:1.6; }
   .modal-close {
     background:none;border:1px solid var(--border-hi);color:var(--text-muted);
     cursor:pointer;font-family:var(--font-pixel);font-size:7px;
     padding:6px 12px;letter-spacing:1px;transition:all 0.15s;
+    flex-shrink:0;white-space:nowrap;
   }
   .modal-close:hover { color:var(--kacky);border-color:var(--kacky); }
   .modal-vid { position:relative;padding-bottom:56.25%;background:#000; }
