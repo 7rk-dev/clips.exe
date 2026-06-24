@@ -337,7 +337,6 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
-    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .etab:last-child { border-right:none; }
@@ -484,7 +483,6 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
-    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .rl-tab:last-child { border-right:none; }
@@ -1060,7 +1058,6 @@
     padding:14px 24px;border:none;background:transparent;
     color:var(--text-muted);cursor:pointer;
     border-right:1px solid var(--border);
-    border-bottom:1px solid var(--border);
     transition:all 0.15s;white-space:nowrap;
   }
   .etab-x:last-child { border-right:none; }
@@ -1200,6 +1197,14 @@
     flex: 1 1 auto !important;
     text-align: center !important;
     padding: 10px 8px !important;
+  }
+  /* Distinction entre les rangées d'onglets : utile uniquement ici, car sur
+     mobile les onglets s'enroulent sur plusieurs lignes (contrairement au
+     desktop où ils tiennent sur une seule ligne). */
+  .etab,
+  .rl-tab,
+  .etab-x {
+    border-bottom: 1px solid var(--border);
   }
 }
 
