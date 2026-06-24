@@ -516,6 +516,19 @@ function buildEmbedUrl(ytId) {
   const countIds = ['kacky-count', 'rl-count', 'cod-count', 'extras-count'];
   const seenOnce = new Set();
 
+  // Jeton de version par élément : chaque nouvel appel d'animateCount sur un
+  // même élément invalide la boucle précédente, qui s'arrête d'elle-même
+  // dès qu'elle détecte qu'elle n'est plus la version "courante".
+  const animTokens = new WeakMap();
+
+  // Tue immédiatement (de façon synchrone) toute animation en cours sur cet
+  // élément, sans en démarrer une nouvelle. Sert à fermer la fenêtre de
+  // course : on invalide DÈS le clic, avant même que la nouvelle valeur
+  // finale ne soit connue / affichée.
+  function invalidateCount(el) {
+    animTokens.set(el, (animTokens.get(el) || 0) + 1);
+  }
+
   function animateCount(el) {
     const finalText = el.textContent.trim();
     const match = finalText.match(/^(\d+)(.*)$/);
@@ -523,10 +536,21 @@ function buildEmbedUrl(ytId) {
 
     const target = parseInt(match[1], 10);
     const suffix = match[2]; // e.g. " CLIPS"
-    const duration = 2800;
+    // Pour les petits totaux (< 10 clips), l'animation classique de 2800ms
+    // paraît traîner pour rien : on la raccourcit nettement dans ce cas.
+    const duration = target < 10 ? 1400 : 2800;
     const start = performance.now();
 
+    // Nouveau jeton pour cet appel : toute boucle plus ancienne sur cet
+    // élément va se voir invalidée au prochain tick.
+    const myToken = (animTokens.get(el) || 0) + 1;
+    animTokens.set(el, myToken);
+
     function tick(now) {
+      // Une animation plus récente a été lancée sur cet élément entre-temps
+      // (ex: changement rapide d'onglet) -> on abandonne cette boucle.
+      if (animTokens.get(el) !== myToken) return;
+
       const progress = Math.min((now - start) / duration, 1);
       // ease-out
       const eased = 1 - Math.pow(1 - progress, 3);
@@ -568,6 +592,19 @@ function buildEmbedUrl(ytId) {
 
     tabSelectors.forEach(sel => {
       document.querySelectorAll(sel).forEach(tab => {
+        // IMPORTANT: listener en phase "capture" => il s'exécute en TOUT PREMIER,
+        // avant tous les autres handlers de clic déjà attachés sur ce bouton
+        // (filtrage, mise à jour du texte, etc.), et même avant les éventuelles
+        // frames requestAnimationFrame restantes de l'animation précédente.
+        // On bump le jeton immédiatement et de façon synchrone : toute boucle
+        // tick() encore en vol pour cet élément devient obsolète sur-le-champ,
+        // qu'on change de catégorie une fois ou dix fois par seconde.
+        tab.addEventListener('click', () => {
+          const countId = tabToCountId[sel];
+          const el = document.getElementById(countId);
+          if (el) invalidateCount(el);
+        }, { capture: true });
+
         tab.addEventListener('click', () => {
           const countId = tabToCountId[sel];
           const el = document.getElementById(countId);
